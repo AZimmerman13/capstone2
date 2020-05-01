@@ -20,6 +20,8 @@ def plot_corr_matrix(df):
     cb.ax.tick_params(labelsize=14)
     plt.title('Correlation Matrix', fontsize=16)
 
+s3_client.download_file(ajzcap2, 'energy_dataset.csv', 'energy_from_s3.csv')
+
 
 
 
