@@ -55,7 +55,15 @@ class Pipeline(object):
         gb = self.df.groupby(group_on)
         self.grouped_avg = gb.mean()
         return
-        
+
+    def clean_categoricals(self, cols):
+        'takes a list of columns to make dummies and drop from the df'
+        for i in cols:
+            dummies = pd.get_dummies(i)
+            pd.concat([self.df, dummies], axis=1)
+            self.df.drop(i)
+
+
 
     def create_holdout(self):
         X_cv, self.X_holdout, y_cv, self.y_holdout = train_test_split(self.X,self.y)
