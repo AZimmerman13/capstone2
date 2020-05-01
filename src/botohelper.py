@@ -34,6 +34,10 @@ echo 'Hello world from boto3!' > hello-boto.txt
 
 
 s3_client = boto3.client('s3')
+#or
+s3 = boto3.resource('s3')
+
+
 s3_client.upload_file('hello-boto.txt', bucket_name, 'hello-remote.txt')
 
 
@@ -42,5 +46,5 @@ print_s3_contents_boto3(boto3_connection)
 # Step 5: Download a file from s3
 
 
-s3_client.download_file(bucket_name, 'hello-remote.txt', 'hello-back-again.txt')
+s3_client.download_file('ajzcap2', 'energy_dataset.csv', 's3_energy.csv')
 print(open('hello-back-again.txt').read())
