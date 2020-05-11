@@ -35,7 +35,11 @@ I had a suspicion that weather_description and weather_id were redundant as they
 weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.  I opted to use weather_description and discard the other two.
 
 
+The weather data was for the 5 largest cities in Spain:
+
 Madrid, Barcelona, Valencia, Sevilla, Bilbao
+
+This dataset was relatively clean save for the ' ' in front of 'Barcelona' in every row, which made for a nice little trouble-shooting session.
 
 
 The energy dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 

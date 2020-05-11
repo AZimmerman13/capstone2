@@ -69,8 +69,8 @@ if __name__ == '__main__':
     # # plt.show()
     # plt.close()
 
-
-    city_df_list = weather.featurize_cities(['Valencia', 'Madrid', "Bilbao", 'Barcelona', 'Sevilla'])
+    #Featurizing Cities
+    city_df_list = weather.featurize_cities(['Valencia', 'Madrid', "Bilbao", ' Barcelona', 'Seville'])
 
     valencia = Pipeline.from_df(city_df_list[0])
     madrid = Pipeline.from_df(city_df_list[1])
@@ -84,13 +84,6 @@ if __name__ == '__main__':
     all_cities_df = vm.merge_dfs(sbb.df)
 
 
-
-   
-
-
-
-
-
     
     # Transformations
     print('\nPerforming transformations')
@@ -98,7 +91,6 @@ if __name__ == '__main__':
     # weather.clean_categoricals(weather_cols)
     energy_cols = []
 
-    # weather.featurize_col("city_name", weather.df.city_name.unique())
 
     full_df = energy.merge_dfs(all_cities_df.df)
     weather.consolidate('dt_iso')
@@ -140,8 +132,8 @@ if __name__ == '__main__':
 
 
     # Dont need to to this everytime I run the script for EDA
-    for (i, fname) in zip(train_test_split_holdout_list, ttsh_filenames):
-            i.to_csv(f"data/{fname}.csv")
+    # for (i, fname) in zip(train_test_split_holdout_list, ttsh_filenames):
+    #         i.to_csv(f"data/{fname}.csv")
    
     for (i, fname) in zip(train_test_split_holdout_list, ttsh_filenames):
         i.to_csv(f's3://ajzcap2/{fname}.csv')
@@ -152,14 +144,14 @@ if __name__ == '__main__':
   
 
     
-    plot_corr_matrix(energy.df)
-    plt.savefig('images/clean_energy_corr.png')
-    # plt.show()
-    plt.close()
-    plot_corr_matrix(weather.df)
-    plt.savefig('images/clean_weather_corr.png')
-    # plt.show()
-    plt.close()
+    # plot_corr_matrix(energy.df)
+    # plt.savefig('images/clean_energy_corr.png')
+    # # plt.show()
+    # plt.close()
+    # plot_corr_matrix(weather.df)
+    # plt.savefig('images/clean_weather_corr.png')
+    # # plt.show()
+    # plt.close()
     
     print('all done.')
 
