@@ -38,20 +38,29 @@ if __name__ == '__main__':
     energy.reset_index()
     weather.reset_index()
 
+# full_df.df.loc[full_df.df[' Barcelona_pressure'] > 1040, ' Barcelona_pressure'] = np.nan
 
-
-
+# weather.df.loc[weather.df.pressure > 1040, 'pressure'] = np.nan
+# weather.df.pressure.fillna(method='pad', inplace=True)
 
     # Drop columns
     weather_drop_cols = ['weather_icon', 'weather_main', 'weather_id']
     energy_drop_cols = ['generation fossil coal-derived gas','generation fossil oil shale', 
                         'generation fossil peat', 'generation geothermal',
-                        'generation marine', 'generation hydro pumped storage aggregated']
+                        'generation marine', 'generation hydro pumped storage aggregated',
+                         'forecast wind offshore eday ahead']
 
     for i in weather_drop_cols:
         weather.df.drop(i, axis=1, inplace=True)
     for i in energy_drop_cols:
         energy.df.drop(i, axis=1, inplace=True)
+
+    for i in energy.df.columns:
+        energy.df[i].fillna(method='pad', inplace=True)
+
+    # propagate last valid observation forward to next valid
+    for i in energy.df.columns:
+        print(f"{i}: missing {energy.df[i].isna().sum()}")
 
     # Demonstrate over-featurization of weather.df
     # for i in weather.df.weather_description.unique():

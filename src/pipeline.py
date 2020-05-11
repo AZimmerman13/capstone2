@@ -10,11 +10,11 @@ class Pipeline(object):
 
     def __init__(self, path):
         # using chunks while on local machine
-        # chunks = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True, iterator=True)
-        # self.df = chunks.get_chunk(40000)
+        chunks = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True, iterator=True)
+        self.df = chunks.get_chunk(40000)
 
         # for aws
-        self.df = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True)
+        # self.df = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True)
 
         # X and y values to be assigned when create_holdout() is run
         self.X = None

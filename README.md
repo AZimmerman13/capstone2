@@ -41,5 +41,7 @@ Madrid, Barcelona, Valencia, Sevilla, Bilbao
 
 This dataset was relatively clean save for the ' ' in front of 'Barcelona' in every row, which made for a nice little trouble-shooting session.
 
+Barcelona pressure contained ~45 rows with reading between 1 and 2 orders of magnitude above the maximum for all other cities.
+
 
 The energy dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 
