@@ -35,8 +35,8 @@ if __name__ == '__main__':
     weather = Pipeline('s3://ajzcap2/weather_features.csv')
 
     #make index a datetime object
-    energy.reset_index()
-    weather.reset_index()
+    energy.my_reset_index()
+    weather.my_reset_index()
 
 # full_df.df.loc[full_df.df[' Barcelona_pressure'] > 1040, ' Barcelona_pressure'] = np.nan
 
@@ -55,10 +55,10 @@ if __name__ == '__main__':
     for i in energy_drop_cols:
         energy.df.drop(i, axis=1, inplace=True)
 
+    # propagate last valid observation forward to next valid
     for i in energy.df.columns:
         energy.df[i].fillna(method='pad', inplace=True)
 
-    # propagate last valid observation forward to next valid
     for i in energy.df.columns:
         print(f"{i}: missing {energy.df[i].isna().sum()}")
 
@@ -133,11 +133,11 @@ if __name__ == '__main__':
     # print('\nWriting train, test, and holdouts to filesystem')
 
     train_test_split_holdout_list = [full_df.X_train, full_df.X_test, 
-                                    full_df.X_holdout, full_df.y_train, 
-                                    full_df.y_test, full_df.y_holdout]
+                                    full_df.X_holdout, , full_df.X_std, full_df.y_train, 
+                                    full_df.y_test, full_df.y_holdout, full_df.y_std]
 
-    ttsh_filenames = ['X_train', 'X_test', 'X_holdout', 'y_train', 
-                    'y_test', 'y_holdout']
+    ttsh_filenames = ['X_train', 'X_test', 'X_holdout', 'X_std','y_train', 
+                    'y_test', 'y_holdout', 'y_std']
 
 
     # Dont need to to this everytime I run the script for EDA

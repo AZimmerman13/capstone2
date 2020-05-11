@@ -29,6 +29,9 @@ class Pipeline(object):
         self.X_holdout = None
         self.y_holdout = None
 
+        self.X_std = None
+        self.y_std = None
+
         # to be assigned if a groupby is necessary
         self.grouped_avg = None
 
@@ -46,32 +49,10 @@ class Pipeline(object):
     def merge_dfs(self,new_df):
         return Pipeline.from_df(self.df.merge(new_df, right_index=True, left_index=True))
 
-    def getXy(self,target):
-        "Target (string): name of the column that contains the y values"
-        self.y = self.df.pop(target)
-        self.X = self.df
-        return self.X, self.y
-
     def consolidate(self, group_on):
         gb = self.df.groupby(group_on)
         self.grouped_avg = gb.mean()
         return
-f
-
-    def featurize_col(self, origin_col, new_features):
-        '''
-        when a column contains values that share an index
-
-        origin_col: str name of column that holds soon-to-be features
-        new_features: list of strings that appear in a column, to be made their own columns.
-
-        ex: 
-
-        '''
-
-        for feat in new_features:
-            for col in self.df.columns:
-                self.df[f"{feat}_{col}"] = self.df[col][self.df[origin_col] == feat]
 
     def featurize_cities(self, names):
         new_dfs = []
@@ -81,9 +62,7 @@ f
             mapper = {k:v for (k, v) in zip(city.columns, new_cols)}
             new_df = city.rename(mapper, axis=1)
             new_dfs.append(new_df)
-        
         return new_dfs
-
 
     def clean_categoricals(self, cols):
         'takes a list of columns to make dummies and drop from the df'
@@ -92,10 +71,24 @@ f
             pd.concat([self.df, dummies], axis=1)
             self.df.drop(i)
 
+    def standardize_cv_set(self):
+        "do this AFTER your 1st train/test/split, no leakage here."
+        Xscaler = StandardScaler()
+        yscaler = StandardScaler()
+        self.X_std = Xscaler.fit_transform(self.X_cv)
+        self.y_std = yscaler.fit_transform(self.y_cv)
+        return
 
+
+    def getXy(self,target):
+        "Target (string): name of the column that contains the y values"
+        self.y = self.df.pop(target)
+        self.X = self.df
+        return self.X, self.y
 
     def create_holdout(self):
         X_cv, self.X_holdout, y_cv, self.y_holdout = train_test_split(self.X,self.y)
+        self.standardize_cv_set() #standardizes the cv set after holdout is created
         self.X_train, self.X_test, self.y_train, self.y_test = \
             train_test_split(X_cv, y_cv)
 
