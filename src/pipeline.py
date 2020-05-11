@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import s3fs
 from sklearn.model_selection import train_test_split
-
+from sklearn.preprocessing import StandardScaler
 
 
 
@@ -10,11 +10,11 @@ class Pipeline(object):
 
     def __init__(self, path):
         # using chunks while on local machine
-        chunks = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True, iterator=True)
-        self.df = chunks.get_chunk(40000)
+        #chunks = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True, iterator=True)
+        #self.df = chunks.get_chunk(40000)
 
         # for aws
-        # self.df = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True)
+        self.df = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True)
 
         # X and y values to be assigned when create_holdout() is run
         self.X = None
@@ -39,10 +39,7 @@ class Pipeline(object):
         obj.df = df
         return obj
 
-    def read(self,path):
-        pass
-
-    def reset_index(self):
+    def my_reset_index(self):
         self.df.index = pd.to_datetime(self.df.index, utc=True)
         return
 
@@ -59,6 +56,7 @@ class Pipeline(object):
         gb = self.df.groupby(group_on)
         self.grouped_avg = gb.mean()
         return
+f
 
     def featurize_col(self, origin_col, new_features):
         '''
