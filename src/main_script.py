@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib
-# matplotlib.use("Agg")
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import importlib
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     vm = valencia.merge_dfs(madrid.df)
     bb = bilbao.merge_dfs(barcelona.df)
     sbb = sevilla.merge_dfs(bb.df)
-    full_df = vm.merge_dfs(sbb.df)
+    all_cities_df = vm.merge_dfs(sbb.df)
 
 
 
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     # weather.featurize_col("city_name", weather.df.city_name.unique())
 
-    merged_df = energy.merge_dfs(weather.df)
+    full_df = energy.merge_dfs(all_cities_df.df)
     weather.consolidate('dt_iso')
     merged_by_date = energy.merge_dfs(weather.grouped_avg)
 
