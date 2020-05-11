@@ -78,7 +78,11 @@ if __name__ == '__main__':
     barcelona = Pipeline.from_df(city_df_list[3])
     sevilla = Pipeline.from_df(city_df_list[4])
 
-    valencia.merge_dfs(madrid)
+    vm = valencia.merge_dfs(madrid.df)
+    bb = bilbao.merge_dfs(barcelona.df)
+    sbb = sevilla.merge_dfs(bb.df)
+    full_df = vm.merge_dfs(sbb.df)
+
 
 
    

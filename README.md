@@ -1,6 +1,6 @@
 # capstone2
 
-
+## EDA
 There were several columns that did not appear useful, such as 'weather_icon' which, according to the data description, contained only information about the "Weather icon code for website".  I removed this column and sought to further reduce dimensionality among the categorical features.
 array(['01n', '01d', '01', '02n', '02d', '02', '03', '04n', '04', '10n',
        '03n', '10', '04d', '03d', '10d', '50d', '09n', '11d', '11n',
