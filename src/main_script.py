@@ -39,12 +39,19 @@ if __name__ == '__main__':
     weather.reset_index()
 
 
+
+
+
     # Drop columns
     weather_drop_cols = ['weather_icon', 'weather_main', 'weather_id']
-    energy_drop_cols = []
+    energy_drop_cols = ['generation fossil coal-derived gas','generation fossil oil shale', 
+                        'generation fossil peat', 'generation geothermal',
+                        'generation marine', 'generation hydro pumped storage aggregated']
 
     for i in weather_drop_cols:
-        weather.df.drop(i)
+        weather.df.drop(i, axis=1, inplace=True)
+    for i in energy_drop_cols:
+        energy.df.drop(i, axis=1, inplace=True)
 
     # Demonstrate over-featurization of weather.df
     # for i in weather.df.weather_description.unique():
@@ -53,14 +60,33 @@ if __name__ == '__main__':
 
 
 
-    plot_corr_matrix(energy.df)
-    plt.savefig('images/energy_corr.png')
-    # plt.show()
-    plt.close()
-    plot_corr_matrix(weather.df)
-    plt.savefig('images/weather_corr.png')
-    # plt.show()
-    plt.close()
+    # plot_corr_matrix(energy.df)
+    # plt.savefig('images/energy_corr.png')
+    # # plt.show()
+    # plt.close()
+    # plot_corr_matrix(weather.df)
+    # plt.savefig('images/weather_corr.png')
+    # # plt.show()
+    # plt.close()
+
+
+    city_df_list = weather.featurize_cities(['Valencia', 'Madrid', "Bilbao", 'Barcelona', 'Sevilla'])
+
+    valencia = Pipeline.from_df(city_df_list[0])
+    madrid = Pipeline.from_df(city_df_list[1])
+    bilbao = Pipeline.from_df(city_df_list[2])
+    barcelona = Pipeline.from_df(city_df_list[3])
+    sevilla = Pipeline.from_df(city_df_list[4])
+
+    valencia.merge_dfs(madrid)
+
+
+   
+
+
+
+
+
     
     # Transformations
     print('\nPerforming transformations')
@@ -81,14 +107,14 @@ if __name__ == '__main__':
     # test.set_index(['dt_iso'])
     # weather.df.set_index('city_name', append=True)
 
-for feat in ["Madrid", "Valencia"]:
-    for col in weather.df.columns:
-        weather.df[f"{feat}_{col}"] = weather.df[col][weather.df['city_name'] == "Madrid"]
+# for feat in ["Madrid", "Valencia"]:
+#     for col in weather.df.columns:
+#         weather.df[f"{feat}_{col}"] = weather.df[col][weather.df['city_name'] == "Madrid"]
 
-cols = test.columns
-for feat in ["Madrid", "Valencia"]:
-    for col in cols[1:]:
-        test[f"{feat}_{col}"] = test[col][test['city_name'] == feat]
+# cols = test.columns
+# for feat in ["Madrid", "Valencia"]:
+#     for col in cols[1:]:
+#         test[f"{feat}_{col}"] = test[col][test['city_name'] == feat]
 
 
 

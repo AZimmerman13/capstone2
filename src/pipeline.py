@@ -11,7 +11,7 @@ class Pipeline(object):
     def __init__(self, path):
         # using chunks while on local machine
         chunks = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True, iterator=True)
-        self.df = chunks.get_chunk(60000)
+        self.df = chunks.get_chunk(40000)
         # X and y values to be assigned when create_holdout() is run
         self.X = None
         self.y = None
@@ -70,6 +70,17 @@ class Pipeline(object):
         for feat in new_features:
             for col in self.df.columns:
                 self.df[f"{feat}_{col}"] = self.df[col][self.df[origin_col] == feat]
+
+    def featurize_cities(self, names):
+        new_dfs = []
+        for i in names:
+            city = self.df[self.df['city_name'] == i]
+            new_cols = [f"{i}_{j}" for j in city.columns]
+            mapper = {k:v for (k, v) in zip(city.columns, new_cols)}
+            new_df = city.rename(mapper, axis=1)
+            new_dfs.append(new_df)
+        
+        return new_dfs
 
 
     def clean_categoricals(self, cols):

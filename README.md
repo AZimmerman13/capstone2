@@ -32,26 +32,10 @@ I had a suspicion that weather_description and weather_id were redundant as they
 | mist                         | 701        | mist           |
 | fog                          | 741        | fog            |
 
-weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.
+weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.  I opted to use weather_description and discard the other two.
 
 
 Madrid, Barcelona, Valencia, Sevilla, Bilbao
 
 
-weather_description
-array(['sky is clear', 'few clouds', 'scattered clouds', 'broken clouds',
-       'overcast clouds', 'light rain', 'moderate rain',
-       'heavy intensity rain', 'mist', 'heavy intensity shower rain',
-       'shower rain', 'very heavy rain', 'thunderstorm with heavy rain',
-       'thunderstorm with light rain', 'thunderstorm with rain',
-       'proximity thunderstorm', 'thunderstorm',
-       'light intensity shower rain', 'light intensity drizzle', 'fog'],
-      dtype=object)
-
-weather_main
-array(['clear', 'clouds', 'rain', 'mist', 'thunderstorm', 'drizzle',
-       'fog'], dtype=object)
-
-weather_id
-array([800, 801, 802, 803, 804, 500, 501, 502, 701, 522, 521, 503, 202,
-       200, 201, 211, 520, 300, 741])
+The energy dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 
