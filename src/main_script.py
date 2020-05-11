@@ -126,25 +126,25 @@ if __name__ == '__main__':
 
 
     print('\nCreating train, test, and holdout sets')
-    merged_by_date.getXy('price actual')
-    merged_by_date.create_holdout()
+    full_df.getXy('price actual')
+    full_df.create_holdout()
 
     # print('\nWriting train, test, and holdouts to filesystem')
 
-    train_test_split_holdout_list = [merged_by_date.X_train, merged_by_date.X_test, 
-                                    merged_by_date.X_holdout, merged_by_date.y_train, 
-                                    merged_by_date.y_test, merged_by_date.y_holdout]
+    train_test_split_holdout_list = [full_df.X_train, full_df.X_test, 
+                                    full_df.X_holdout, full_df.y_train, 
+                                    full_df.y_test, full_df.y_holdout]
 
     ttsh_filenames = ['X_train', 'X_test', 'X_holdout', 'y_train', 
                     'y_test', 'y_holdout']
 
 
     # Dont need to to this everytime I run the script for EDA
-    # for (i, fname) in zip(train_test_split_holdout_list, ttsh_filenames):
-    #         i.to_csv(f"data/{fname}.csv")
+    for (i, fname) in zip(train_test_split_holdout_list, ttsh_filenames):
+            i.to_csv(f"data/{fname}.csv")
    
-    # for (i, fname) in zip(train_test_split_holdout_list, ttsh_filenames):
-    #     i.to_csv(f's3://ajzcap2/{fname}.csv')
+    for (i, fname) in zip(train_test_split_holdout_list, ttsh_filenames):
+        i.to_csv(f's3://ajzcap2/{fname}.csv')
    
 
     
