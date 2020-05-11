@@ -38,6 +38,21 @@ if __name__ == '__main__':
     energy.reset_index()
     weather.reset_index()
 
+
+    # Drop columns
+    weather_drop_cols = ['weather_icon', 'weather_main', 'weather_id']
+    energy_drop_cols = []
+
+    for i in weather_drop_cols:
+        weather.df.drop(i)
+
+    # Demonstrate over-featurization of weather.df
+    # for i in weather.df.weather_description.unique():
+    #     print(f"{i} = {weather.df.weather_id[weather.df.weather_description == i].unique()}, {weather.df.weather_main[weather.df.weather_description == i].unique()}")
+
+
+
+
     plot_corr_matrix(energy.df)
     plt.savefig('images/energy_corr.png')
     # plt.show()
@@ -49,16 +64,35 @@ if __name__ == '__main__':
     
     # Transformations
     print('\nPerforming transformations')
-    weather_cols = ['weather_icon', 'weather_description', 'weather_main', 'weather_id']
-    weather.clean_categoricals(weather_cols)
+    weather_cols = ['weather_description', 'weather_main', 'weather_id']
+    # weather.clean_categoricals(weather_cols)
     energy_cols = []
 
-
+    # weather.featurize_col("city_name", weather.df.city_name.unique())
 
     merged_df = energy.merge_dfs(weather.df)
     weather.consolidate('dt_iso')
     merged_by_date = energy.merge_dfs(weather.grouped_avg)
-    
+
+    # weather.df.set_index('city_name', append=True, inplace=False, drop=False)
+
+    # test = test.reset_index()
+
+    # test.set_index(['dt_iso'])
+    # weather.df.set_index('city_name', append=True)
+
+for feat in ["Madrid", "Valencia"]:
+    for col in weather.df.columns:
+        weather.df[f"{feat}_{col}"] = weather.df[col][weather.df['city_name'] == "Madrid"]
+
+cols = test.columns
+for feat in ["Madrid", "Valencia"]:
+    for col in cols[1:]:
+        test[f"{feat}_{col}"] = test[col][test['city_name'] == feat]
+
+
+
+
 
 
     print('\nCreating train, test, and holdout sets')

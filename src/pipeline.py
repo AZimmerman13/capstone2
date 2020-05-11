@@ -11,7 +11,7 @@ class Pipeline(object):
     def __init__(self, path):
         # using chunks while on local machine
         chunks = pd.read_csv(path,index_col=0, parse_dates=[0], skip_blank_lines=True, iterator=True)
-        self.df = chunks.get_chunk(10000)
+        self.df = chunks.get_chunk(60000)
         # X and y values to be assigned when create_holdout() is run
         self.X = None
         self.y = None
@@ -55,6 +55,22 @@ class Pipeline(object):
         gb = self.df.groupby(group_on)
         self.grouped_avg = gb.mean()
         return
+
+    def featurize_col(self, origin_col, new_features):
+        '''
+        when a column contains values that share an index
+
+        origin_col: str name of column that holds soon-to-be features
+        new_features: list of strings that appear in a column, to be made their own columns.
+
+        ex: 
+
+        '''
+
+        for feat in new_features:
+            for col in self.df.columns:
+                self.df[f"{feat}_{col}"] = self.df[col][self.df[origin_col] == feat]
+
 
     def clean_categoricals(self, cols):
         'takes a list of columns to make dummies and drop from the df'
