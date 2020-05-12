@@ -71,12 +71,12 @@ class Pipeline(object):
             pd.concat([self.df, dummies], axis=1)
             self.df.drop(i)
 
-    def standardize_cv_set(self):
+    def standardize(self, X, y):
         "do this AFTER your 1st train/test/split, no leakage here."
         Xscaler = StandardScaler()
         yscaler = StandardScaler()
-        self.X_std = Xscaler.fit_transform(self.X_cv)
-        self.y_std = yscaler.fit_transform(self.y_cv)
+        self.X_std = Xscaler.fit_transform(X)
+        self.y_std = yscaler.fit_transform(y)
         return
 
 
@@ -88,7 +88,7 @@ class Pipeline(object):
 
     def create_holdout(self):
         X_cv, self.X_holdout, y_cv, self.y_holdout = train_test_split(self.X,self.y)
-        self.standardize_cv_set() #standardizes the cv set after holdout is created
+        self.standardize(X_cv, y_cv) #standardizes the cv set after holdout is created
         self.X_train, self.X_test, self.y_train, self.y_test = \
             train_test_split(X_cv, y_cv)
 
