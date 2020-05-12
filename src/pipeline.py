@@ -55,6 +55,7 @@ class Pipeline(object):
         return
 
     def featurize_cities(self, names):
+        'returns a list of dataframes, one for each city.'
         new_dfs = []
         for i in names:
             city = self.df[self.df['city_name'] == i]
