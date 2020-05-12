@@ -215,7 +215,7 @@ if __name__ == '__main__':
     model.fit(full_df.X_std, full_df.y_train)
     y_pred = model.predict(full_df.Xscaler.transform(full_df.X_test))
 
-    lasso_alphas = np.logspace((-2, 4, num=250))
+    lasso_alphas = np.logspace(-2, 4, num=300)
 
     lasso_cv_errors_train, lasso_cv_errors_test = train_at_various_alphas(
     df_full.X_std.values, df_full.y_train.values, Lasso, lasso_alphas)
