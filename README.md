@@ -45,9 +45,9 @@ Barcelona pressure contained ~45 rows with reading between 1 and 2 orders of mag
 
 no snow in seville or barcelona,
 
-A deeper look into t
 
-perhaps unsurprisingly, temp, max_temp, and min_temp were highly correlated
+
+perhaps unsurprisingly, temp, max_temp, and min_temp were highly correlated.  The final straw in removing these columns was seeing them with variance inflation factors over 500.
 
 
 The energy dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 

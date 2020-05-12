@@ -61,7 +61,7 @@ if __name__ == '__main__':
                         'generation fossil peat', 'generation geothermal',
                         'generation marine', 'generation hydro pumped storage aggregated',
                          'forecast wind offshore eday ahead', 'generation wind offshore', 
-                         'price day ahead', 'total load forecast']
+                         'price day ahead', 'total load forecast', 'forecast wind onshore day ahead', 'forecast solar day ahead']
 
     for i in weather_drop_cols:
         weather.df.drop(i, axis=1, inplace=True)
