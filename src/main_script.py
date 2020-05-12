@@ -59,8 +59,8 @@ if __name__ == '__main__':
     for i in energy.df.columns:
         energy.df[i].fillna(method='pad', inplace=True)
 
-    for i in energy.df.columns:
-        print(f"{i}: missing {energy.df[i].isna().sum()}")
+    # for i in energy.df.columns:
+    #     print(f"{i}: missing {energy.df[i].isna().sum()}")
 
     # Demonstrate over-featurization of weather.df
     # for i in weather.df.weather_description.unique():
@@ -157,6 +157,7 @@ if __name__ == '__main__':
     #         i.to_csv(f"data/{fname}.csv")
    
     for (i, fname) in zip(train_test_split_holdout_list, ttsh_filenames):
+        if type(i) == 'numpy.ndarray':
         i.to_csv(f's3://ajzcap2/{fname}.csv')
    
 
