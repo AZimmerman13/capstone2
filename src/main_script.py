@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import importlib
 matplotlib.use("Agg")
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold
 from sklearn.linear_model import Lasso
 from src.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
