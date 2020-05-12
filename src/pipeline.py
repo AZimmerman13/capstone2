@@ -30,7 +30,7 @@ class Pipeline(object):
         self.y_holdout = None
 
         self.X_std = None
-        self.y_std = None
+        
 
         # to be assigned if a groupby is necessary
         self.grouped_avg = None
