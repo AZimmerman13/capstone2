@@ -320,6 +320,7 @@ if __name__ == '__main__':
     y = full_df.y_train
 
     reg = LassoCV(random_state=0, verbose=True, n_jobs=-1)
+    reg.fit(X,y)
     regscore = reg.score(X, y)
     print(regscore)
     y_preds = reg.predict(full_df.Xscaler.transform(full_df.X_test))
