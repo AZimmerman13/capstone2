@@ -77,6 +77,10 @@ if __name__ == '__main__':
     # plt.savefig('images/weather_corr.png')
     # # plt.show()
     # plt.close()
+    # Clean Catagoricals
+    weather.clean_categoricals(['weather_description'])
+
+
 
     #Featurizing Cities
     city_df_list = weather.featurize_cities(['Valencia', 'Madrid', "Bilbao", ' Barcelona', 'Seville'])
