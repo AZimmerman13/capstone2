@@ -5,7 +5,7 @@ import matplotlib
 import importlib
 matplotlib.use("Agg")
 from sklearn.model_selection import train_test_split, KFold
-from sklearn.linear_model import Lasso
+from sklearn.linear_model import Lasso, LassoCV
 from src.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -259,61 +259,72 @@ if __name__ == '__main__':
     plt.close()
 
     print("Lasso time: yee-haw")
-    model = Lasso(max_iter=1000, alpha=1.0)
-    model.fit(full_df.X_std, full_df.y_train)
-    y_pred = model.predict(full_df.Xscaler.transform(full_df.X_test))
+    # model = Lasso(max_iter=1000, alpha=1.0)
+    # model.fit(full_df.X_std, full_df.y_train)
+    # y_pred = model.predict(full_df.Xscaler.transform(full_df.X_test))
 
-    lasso_alphas = np.logspace(-2, 4, num=300)
+    # lasso_alphas = np.logspace(-2, 4, num=300)
 
-    lasso_cv_errors_train, lasso_cv_errors_test = train_at_various_alphas(
-    full_df.X_train.values, full_df.y_train.values, Lasso, lasso_alphas)
+    # lasso_cv_errors_train, lasso_cv_errors_test = train_at_various_alphas(
+    # full_df.X_train.values, full_df.y_train.values, Lasso, lasso_alphas)
 
-    lasso_mean_cv_errors_train = lasso_cv_errors_train.mean(axis=0)
-    lasso_mean_cv_errors_test = lasso_cv_errors_test.mean(axis=0)
+    # lasso_mean_cv_errors_train = lasso_cv_errors_train.mean(axis=0)
+    # lasso_mean_cv_errors_test = lasso_cv_errors_test.mean(axis=0)
 
-    lasso_optimal_alpha = get_optimal_alpha(lasso_mean_cv_errors_test)
+    # lasso_optimal_alpha = get_optimal_alpha(lasso_mean_cv_errors_test)
         
-    fig, ax = plt.subplots(figsize=(14, 4))
-    ax.plot(np.log10(lasso_alphas), lasso_mean_cv_errors_train)
-    ax.plot(np.log10(lasso_alphas), lasso_mean_cv_errors_test)
-    ax.axvline(np.log10(lasso_optimal_alpha), color='grey')
-    ax.set_title("LASSO Regression Train and Test MSE")
-    ax.set_xlabel(r"$\log(\alpha)$")
-    ax.set_ylabel("MSE")
-    plt.savefig('images/lasso_errors_vs_alpha.png')
-    plt.close()
+    # fig, ax = plt.subplots(figsize=(14, 4))
+    # ax.plot(np.log10(lasso_alphas), lasso_mean_cv_errors_train)
+    # ax.plot(np.log10(lasso_alphas), lasso_mean_cv_errors_test)
+    # ax.axvline(np.log10(lasso_optimal_alpha), color='grey')
+    # ax.set_title("LASSO Regression Train and Test MSE")
+    # ax.set_xlabel(r"$\log(\alpha)$")
+    # ax.set_ylabel("MSE")
+    # plt.savefig('images/lasso_errors_vs_alpha.png')
+    # plt.close()
 
-    lasso_models = []
+    # lasso_models = []
 
-    for alpha in lasso_alphas:
-        scaler = StandardScaler()
-        scaler.fit(full_df.X_train.values, full_df.y_train.values)
-        X_train_std, y_train_std = scaler.transform(full_df.X_train.values, full_df.y_train.values)
-        lasso = Lasso(alpha=alpha)
-        lasso.fit(X_train_std, y_train_std)
-        lasso_models.append(lasso)
+    # for alpha in lasso_alphas:
+    #     scaler = StandardScaler()
+    #     scaler.fit(full_df.X_train.values, full_df.y_train.values)
+    #     X_train_std, y_train_std = scaler.transform(full_df.X_train.values, full_df.y_train.values)
+    #     lasso = Lasso(alpha=alpha)
+    #     lasso.fit(X_train_std, y_train_std)
+    #     lasso_models.append(lasso)
 
-    paths = pd.DataFrame(np.empty(shape=(len(lasso_alphas), len(X_train.columns))),
-                     index=lasso_alphas, columns=X_train.columns)
+    # paths = pd.DataFrame(np.empty(shape=(len(lasso_alphas), len(X_train.columns))),
+    #                  index=lasso_alphas, columns=X_train.columns)
 
-    for idx, model in enumerate(lasso_models):
-        paths.iloc[idx] = model.coef_
+    # for idx, model in enumerate(lasso_models):
+    #     paths.iloc[idx] = model.coef_
         
-    fig, ax = plt.subplots(figsize=(14, 4))
-    for column in full_df.X_train.columns:
-        path = paths.loc[:, column]
-        ax.plot(np.log10(lasso_alphas), path, label=column)
-    ax.axvline(np.log10(lasso_optimal_alpha), color='grey')
-    ax.legend(loc='lower right')
-    ax.set_title("LASSO Regression, Standardized Coefficient Paths")
-    ax.set_xlabel(r"$\log(\alpha)$")
-    ax.set_ylabel("Standardized Coefficient")
+    # fig, ax = plt.subplots(figsize=(14, 4))
+    # for column in full_df.X_train.columns:
+    #     path = paths.loc[:, column]
+    #     ax.plot(np.log10(lasso_alphas), path, label=column)
+    # ax.axvline(np.log10(lasso_optimal_alpha), color='grey')
+    # ax.legend(loc='lower right')
+    # ax.set_title("LASSO Regression, Standardized Coefficient Paths")
+    # ax.set_xlabel(r"$\log(\alpha)$")
+    # ax.set_ylabel("Standardized Coefficient")
 
-    plt.savefig('images/lasso_coeff_paths.png')
+    # plt.savefig('images/lasso_coeff_paths.png')
+    # plt.close()
 
+   
 
+# LassoCV
 
+    X = full_df.X_std
+    y = full_df.y_train
 
+    reg = LassoCV(random_state=0, verbose=True, n_jobs=-1)
+    regscore = reg.score(X, y)
+    print(regscore)
+    y_preds = reg.predict(full_df.Xscaler.transform(full_df.X_test))
+    best_alpha = reg.alpha_
+    print(f"Best alpha = {best_alpha}")
     print('all done.')
 
 
