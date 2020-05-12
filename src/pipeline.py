@@ -89,6 +89,6 @@ class Pipeline(object):
         self.X_train, self.X_test, self.y_train, self.y_test = \
             train_test_split(X_cv, y_cv)
 
-        self.standardize(X_train) #standardizes the train set after holdout is created
+        self.standardize(self.X_train) #standardizes the train set after holdout is created
 
         return
