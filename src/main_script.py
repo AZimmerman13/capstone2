@@ -218,7 +218,7 @@ if __name__ == '__main__':
     lasso_alphas = np.logspace(-2, 4, num=300)
 
     lasso_cv_errors_train, lasso_cv_errors_test = train_at_various_alphas(
-    df_full.X_std.values, df_full.y_train.values, Lasso, lasso_alphas)
+    full_df.X_std.values, full_df.y_train.values, Lasso, lasso_alphas)
 
     lasso_mean_cv_errors_train = lasso_cv_errors_train.mean(axis=0)
     lasso_mean_cv_errors_test = lasso_cv_errors_test.mean(axis=0)
