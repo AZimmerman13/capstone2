@@ -133,7 +133,7 @@ if __name__ == '__main__':
     # print('\nWriting train, test, and holdouts to filesystem')
 
     train_test_split_holdout_list = [full_df.X_train, full_df.X_test, 
-                                    full_df.X_holdout, , full_df.X_std, full_df.y_train, 
+                                    full_df.X_holdout, full_df.X_std, full_df.y_train, 
                                     full_df.y_test, full_df.y_holdout, full_df.y_std]
 
     ttsh_filenames = ['X_train', 'X_test', 'X_holdout', 'X_std','y_train', 
