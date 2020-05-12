@@ -43,7 +43,9 @@ This dataset was relatively clean save for the ' ' in front of 'Barcelona' in ev
 
 Barcelona pressure contained ~45 rows with reading between 1 and 2 orders of magnitude above the maximum for all other cities.
 
-no snow in seville or barcelona
+no snow in seville or barcelona,
+
+A deeper look into t
 
 perhaps unsurprisingly, temp, max_temp, and min_temp were highly correlated
 
