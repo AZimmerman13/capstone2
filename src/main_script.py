@@ -114,10 +114,10 @@ def cv(X, y, base_estimator, n_folds, random_seed=154): # credit: Galvanize Data
     """
     kf = KFold(n_splits=n_folds, random_state=random_seed)
     test_cv_errors, train_cv_errors = np.empty(n_folds), np.empty(n_folds)
-    for idx, (train, test) in enumerate(kf.split(X_train)):
+    for idx, (train, test) in enumerate(kf.split(full_df.X_train)):
         # Split into train and test
-        X_cv_train, y_cv_train = X[train], y[train]
-        X_cv_test, y_cv_test = X[test], y[test]
+        X_cv_train, y_cv_train = full_df.X[train], full_df.y[train]
+        X_cv_test, y_cv_test = full_df.X[test], full_df.y[test]
         # Standardize data.
         standardizer = XyScaler()
         standardizer.fit(X_cv_train, y_cv_train)
