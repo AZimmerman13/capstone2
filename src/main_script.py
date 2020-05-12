@@ -14,7 +14,7 @@ from src.pipeline import Pipeline
 def plot_corr_matrix(df):
     f = plt.figure(figsize=(19, 15))
     plt.matshow(df.corr(), fignum=f.number)
-    plt.xticks(range(df.shape[1]), df.columns, fontsize=14, rotation=0)
+    plt.xticks(range(df.shape[1]), df.columns, fontsize=14, rotation=90)
     plt.yticks(range(df.shape[1]), df.columns, fontsize=14)
     cb = plt.colorbar()
     cb.ax.tick_params(labelsize=14)
