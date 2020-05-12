@@ -56,7 +56,7 @@ if __name__ == '__main__':
     weather.my_reset_index()
 
     # Drop columns
-    weather_drop_cols = ['weather_icon', 'weather_main', 'weather_id']
+    weather_drop_cols = ['weather_icon', 'weather_main', 'weather_id', 'temp_min', 'temp_max']
     energy_drop_cols = ['generation fossil coal-derived gas','generation fossil oil shale', 
                         'generation fossil peat', 'generation geothermal',
                         'generation marine', 'generation hydro pumped storage aggregated',
@@ -190,7 +190,7 @@ if __name__ == '__main__':
     vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
     vif["features"] = full_df.df.columns
 
-    print(vif.round(1))
+    print(vif.sort_values('VIF Factor', ascending=False).head(20).round(1))
 
 
     
