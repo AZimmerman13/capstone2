@@ -43,5 +43,9 @@ This dataset was relatively clean save for the ' ' in front of 'Barcelona' in ev
 
 Barcelona pressure contained ~45 rows with reading between 1 and 2 orders of magnitude above the maximum for all other cities.
 
+no snow in seville or barcelona
+
+perhaps unsurprisingly, temp, max_temp, and min_temp were highly correlated
+
 
 The energy dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 

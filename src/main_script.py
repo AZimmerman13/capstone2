@@ -14,7 +14,7 @@ from src.pipeline import Pipeline
 def plot_corr_matrix(df):
     f = plt.figure(figsize=(19, 15))
     plt.matshow(df.corr(), fignum=f.number)
-    plt.xticks(range(df.shape[1]), df.columns, fontsize=14, rotation=45)
+    plt.xticks(range(df.shape[1]), df.columns, fontsize=14, rotation=0)
     plt.yticks(range(df.shape[1]), df.columns, fontsize=14)
     cb = plt.colorbar()
     cb.ax.tick_params(labelsize=14)
@@ -43,7 +43,8 @@ if __name__ == '__main__':
     energy_drop_cols = ['generation fossil coal-derived gas','generation fossil oil shale', 
                         'generation fossil peat', 'generation geothermal',
                         'generation marine', 'generation hydro pumped storage aggregated',
-                         'forecast wind offshore eday ahead', 'generation wind offshore']
+                         'forecast wind offshore eday ahead', 'generation wind offshore', 
+                         'price day ahead', 'total load forecast']
 
     for i in weather_drop_cols:
         weather.df.drop(i, axis=1, inplace=True)
@@ -94,7 +95,7 @@ if __name__ == '__main__':
 
     # clean residual col names that came from the merge
     for i in ["Valencia_city_name", " Barcelona_city_name", "Bilbao_city_name", 
-            "Seville_city_name", "Madrid_city_name"]:
+            "Seville_city_name", "Madrid_city_name", 'Seville_snow_3h', ' Barcelona_snow_3h']:
         all_cities_df.df.drop(i, axis=1, inplace=True)
 
     
@@ -106,6 +107,10 @@ if __name__ == '__main__':
 
     # Merge energy with the featurized cities DF to make the complete DataFrame
     full_df = energy.merge_dfs(all_cities_df.df)
+
+    plot_corr_matrix(full_df.df)
+    plt.savefig('images/full_corr.png')
+    plt.close()
 
 
     print('\nCreating train, test, and holdout sets')
@@ -145,9 +150,7 @@ if __name__ == '__main__':
     # plt.show()
     plt.close()
 
-    plot_corr_matrix(full_df.df)
-    plt.savefig('images/full_corr.png')
-    plt.close()
+    
     
     print('all done.')
 
