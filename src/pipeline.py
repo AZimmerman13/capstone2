@@ -84,6 +84,7 @@ class Pipeline(object):
         "Target (string): name of the column that contains the y values"
         self.y = self.df.pop(target)
         self.X = self.df
+        self.df = pd.concat([self.df,self.y], axis=1)
         return self.X, self.y
 
     def create_holdout(self):

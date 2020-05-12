@@ -136,6 +136,8 @@ if __name__ == '__main__':
     full_df.getXy('price actual')
     full_df.create_holdout()
 
+    self.df = pd.concat([self.df,self.y], axis=1)
+
     print('\nWriting train, test, and holdouts to filesystem')
 
     train_test_split_holdout_list = [full_df.X_train, full_df.X_test, 
