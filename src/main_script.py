@@ -23,7 +23,7 @@ def plot_corr_matrix(df):
     cb = plt.colorbar()
     cb.ax.tick_params(labelsize=14)
     plt.title('Correlation Matrix', fontsize=16)
-    plt.tight_layout()
+    # plt.tight_layout()
 
 def get_redundant_pairs(df):
      '''Get diagonal and lower triangular pairs of correlation matrix'''
