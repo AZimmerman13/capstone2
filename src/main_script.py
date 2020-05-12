@@ -92,6 +92,7 @@ if __name__ == '__main__':
     sbb = sevilla.merge_dfs(bb.df)
     all_cities_df = vm.merge_dfs(sbb.df)
 
+    
 
     
     # Transformations
@@ -102,6 +103,13 @@ if __name__ == '__main__':
 
 
     full_df = energy.merge_dfs(all_cities_df.df)
+
+
+    for i in ["Valencia_city_name", " Barcelona_city_name", "Bilbao_city_name", 
+            "Seville_city_name", "Madrid_city_name"]:
+        full_df.df.drop(i, axis=1, inplace=True)
+
+
     weather.consolidate('dt_iso')
     merged_by_date = energy.merge_dfs(weather.grouped_avg)
 
