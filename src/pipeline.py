@@ -74,7 +74,7 @@ class Pipeline(object):
     def standardize(self, X):
         "do this AFTER your 1st train/test/split, no leakage here."
         Xscaler = StandardScaler()
-        self.X_std = Xscaler.fit_transform(X)
+        self.X_std = pd.DataFrame(Xscaler.fit_transform(X))
         return
 
 
