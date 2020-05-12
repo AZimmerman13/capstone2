@@ -85,6 +85,54 @@ def get_optimal_alpha(mean_cv_errors_test): # Credit: Galvanize Data Science
     optimal_alpha = alphas[optimal_idx]
     return optimal_alpha
 
+def cv(X, y, base_estimator, n_folds, random_seed=154): # credit: Galvanize Data Science
+    """Estimate the in and out-of-sample error of a model using cross validation.
+    
+    Parameters
+    ----------
+    
+    X: np.array
+      Matrix of predictors.
+      
+    y: np.array
+      Target array.
+      
+    base_estimator: sklearn model object.
+      The estimator to fit.  Must have fit and predict methods.
+      
+    n_folds: int
+      The number of folds in the cross validation.
+      
+    random_seed: int
+      A seed for the random number generator, for repeatability.
+    
+    Returns
+    -------
+      
+    train_cv_errors, test_cv_errors: tuple of arrays
+      The training and testing errors for each fold of cross validation.
+    """
+    kf = KFold(n_splits=n_folds, random_state=random_seed)
+    test_cv_errors, train_cv_errors = np.empty(n_folds), np.empty(n_folds)
+    for idx, (train, test) in enumerate(kf.split(X_train)):
+        # Split into train and test
+        X_cv_train, y_cv_train = X[train], y[train]
+        X_cv_test, y_cv_test = X[test], y[test]
+        # Standardize data.
+        standardizer = XyScaler()
+        standardizer.fit(X_cv_train, y_cv_train)
+        X_cv_train_std, y_cv_train_std = standardizer.transform(X_cv_train, y_cv_train)
+        X_cv_test_std, y_cv_test_std = standardizer.transform(X_cv_test, y_cv_test)
+        # Fit estimator
+        estimator = clone(base_estimator)
+        estimator.fit(X_cv_train_std, y_cv_train_std)
+        # Measure performance
+        y_hat_train = estimator.predict(X_cv_train_std)
+        y_hat_test = estimator.predict(X_cv_test_std)
+        # Calclate the error metrics
+        train_cv_errors[idx] = rss(y_cv_train_std, y_hat_train)
+        test_cv_errors[idx] = rss(y_cv_test_std, y_hat_test)
+    return train_cv_errors, test_cv_errors
 
 
 if __name__ == '__main__':
