@@ -319,7 +319,7 @@ if __name__ == '__main__':
     X = full_df.X_std
     y = full_df.y_train
 
-    reg = LassoCV(random_state=0, verbose=True, n_jobs=-1)
+    reg = LassoCV(random_state=0, verbose=True, n_jobs=-1, max_iter = 10000)
     reg.fit(X,y)
     regscore = reg.score(X, y)
     print(regscore)
