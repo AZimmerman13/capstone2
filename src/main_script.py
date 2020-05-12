@@ -1,11 +1,15 @@
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+import matplotlib
 import importlib
+matplotlib.use("Agg")
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import Lasso
 from src.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+
 # importlib.reload(src.pipeline)
 # from src.pipeline import Pipeline
 
@@ -19,10 +23,67 @@ def plot_corr_matrix(df):
     cb = plt.colorbar()
     cb.ax.tick_params(labelsize=14)
     plt.title('Correlation Matrix', fontsize=16)
+    plt.tight_layout()
 
+def get_redundant_pairs(df):
+     '''Get diagonal and lower triangular pairs of correlation matrix'''
+     pairs_to_drop = set()
+     cols = df.columns
+     for i in range(0, df.shape[1]):
+         for j in range(0, i+1):
+             pairs_to_drop.add((cols[i], cols[j]))
+     return pairs_to_drop
 
+def get_top_abs_correlations(df, n=5):
+     au_corr = df.corr().abs().unstack()
+     labels_to_drop = get_redundant_pairs(df)
+     au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=False)
+     return au_corr[0:n]
 
+def train_at_various_alphas(X, y, model, alphas, n_folds=10, **kwargs): # Credit: Gavanize Data Science
+    """Train a regularized regression model using cross validation at various values of alpha.
+    
+    Parameters
+    ----------
+    
+    X: np.array
+      Matrix of predictors.
+      
+    y: np.array
+      Target array.
+      
+    model: sklearn model class
+      A class in sklearn that can be used to create a regularized regression object.  Options are `Ridge` and `Lasso`.
+      
+    alphas: numpy array
+      An array of regularization parameters.
+      
+    n_folds: int
+      Number of cross validation folds.
+      
+    Returns
+    -------
+    
+    cv_errors_train, cv_errors_test: tuple of DataFrame
+      DataFrames containing the training and testing errors for each value of 
+      alpha and each cross validation fold.  Each row represents a CV fold,
+      and each column a value of alpha.
+    """
+    cv_errors_train = pd.DataFrame(np.empty(shape=(n_folds, len(alphas))),
+                                     columns=alphas)
+    cv_errors_test = pd.DataFrame(np.empty(shape=(n_folds, len(alphas))),
+                                        columns=alphas)
+    for alpha in alphas:
+        train_fold_errors, test_fold_errors = cv(X, y, model(alpha=alpha, **kwargs), n_folds=n_folds)
+        cv_errors_train.loc[:, alpha] = train_fold_errors
+        cv_errors_test.loc[:, alpha] = test_fold_errors
+    return cv_errors_train, cv_errors_test
 
+def get_optimal_alpha(mean_cv_errors_test): # Credit: Galvanize Data Science
+    alphas = mean_cv_errors_test.index
+    optimal_idx = np.argmin(mean_cv_errors_test.values)
+    optimal_alpha = alphas[optimal_idx]
+    return optimal_alpha
 
 
 
@@ -112,6 +173,8 @@ if __name__ == '__main__':
     plt.savefig('images/full_corr.png')
     plt.close()
 
+    get_top_abs_correlations(full_df.df, 10)
+
 
     print('\nCreating train, test, and holdout sets')
     full_df.getXy('price actual')
@@ -137,9 +200,6 @@ if __name__ == '__main__':
    
 
     
-
-  
-
     
     plot_corr_matrix(energy.df)
     plt.savefig('images/clean_energy_corr.png')
@@ -150,8 +210,62 @@ if __name__ == '__main__':
     # plt.show()
     plt.close()
 
-    
-    
+    print("Lasso time: yee-haw")
+    model = Lasso(max_iter=1000, alpha=1.0)
+    model.fit(full_df.X_std, full_df.y_train)
+    y_pred = model.predict(full_df.Xscaler.transform(full_df.X_test))
+
+    lasso_alphas = np.logspace((-2, 4, num=250))
+
+    lasso_cv_errors_train, lasso_cv_errors_test = train_at_various_alphas(
+    df_full.X_std.values, df_full.y_train.values, Lasso, lasso_alphas)
+
+    lasso_mean_cv_errors_train = lasso_cv_errors_train.mean(axis=0)
+    lasso_mean_cv_errors_test = lasso_cv_errors_test.mean(axis=0)
+
+    lasso_optimal_alpha = get_optimal_alpha(lasso_mean_cv_errors_test)
+        
+    fig, ax = plt.subplots(figsize=(14, 4))
+    ax.plot(np.log10(lasso_alphas), lasso_mean_cv_errors_train)
+    ax.plot(np.log10(lasso_alphas), lasso_mean_cv_errors_test)
+    ax.axvline(np.log10(lasso_optimal_alpha), color='grey')
+    ax.set_title("LASSO Regression Train and Test MSE")
+    ax.set_xlabel(r"$\log(\alpha)$")
+    ax.set_ylabel("MSE")
+    plt.savefig('images/lasso_errors_vs_alpha.png')
+    plt.close()
+
+    lasso_models = []
+
+    for alpha in lasso_alphas:
+        scaler = StandardScaler()
+        scaler.fit(full_df.X_train.values, full_df.y_train.values)
+        X_train_std, y_train_std = scaler.transform(full_df.X_train.values, full_df.y_train.values)
+        lasso = Lasso(alpha=alpha)
+        lasso.fit(X_train_std, y_train_std)
+        lasso_models.append(lasso)
+
+    paths = pd.DataFrame(np.empty(shape=(len(lasso_alphas), len(X_train.columns))),
+                     index=lasso_alphas, columns=X_train.columns)
+
+    for idx, model in enumerate(lasso_models):
+        paths.iloc[idx] = model.coef_
+        
+    fig, ax = plt.subplots(figsize=(14, 4))
+    for column in full_df.X_train.columns:
+        path = paths.loc[:, column]
+        ax.plot(np.log10(lasso_alphas), path, label=column)
+    ax.axvline(np.log10(lasso_optimal_alpha), color='grey')
+    ax.legend(loc='lower right')
+    ax.set_title("LASSO Regression, Standardized Coefficient Paths")
+    ax.set_xlabel(r"$\log(\alpha)$")
+    ax.set_ylabel("Standardized Coefficient")
+
+    plt.savefig('images/lasso_coeff_paths.png')
+
+
+
+
     print('all done.')
 
 

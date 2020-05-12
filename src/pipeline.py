@@ -30,6 +30,7 @@ class Pipeline(object):
         self.y_holdout = None
 
         self.X_std = None
+        self.Xscaler = None
         
 
         # to be assigned if a groupby is necessary
@@ -74,7 +75,7 @@ class Pipeline(object):
 
     def standardize(self, X):
         "do this AFTER your 1st train/test/split, no leakage here."
-        Xscaler = StandardScaler()
+        self.Xscaler = StandardScaler()
         self.X_std = pd.DataFrame(Xscaler.fit_transform(X))
         return
 
