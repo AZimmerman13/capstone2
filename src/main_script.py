@@ -188,7 +188,7 @@ if __name__ == '__main__':
 # VIF
     vif = pd.DataFrame()
     vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
-    vif["features"] = X.columns
+    vif["features"] = full_df.df.columns
 
     print(vif.round(1))
 
