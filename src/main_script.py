@@ -119,7 +119,7 @@ def cv(X, y, base_estimator, n_folds, random_seed=154): # credit: Galvanize Data
         X_cv_train, y_cv_train = X[train], y[train]
         X_cv_test, y_cv_test = X[test], y[test]
         # Standardize data.
-        standardizer = XyScaler()
+        standardizer = StandardScaler()
         standardizer.fit(X_cv_train, y_cv_train)
         X_cv_train_std, y_cv_train_std = standardizer.transform(X_cv_train, y_cv_train)
         X_cv_test_std, y_cv_test_std = standardizer.transform(X_cv_test, y_cv_test)
