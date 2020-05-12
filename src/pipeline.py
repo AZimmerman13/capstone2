@@ -69,7 +69,7 @@ class Pipeline(object):
         for i in cols:
             dummies = pd.get_dummies(self.df[i])
             pd.concat([self.df, dummies], axis=1)
-            self.df.drop(i)
+            self.df.drop(i, inplace=True, axis=1)
 
     def standardize(self, X, y):
         "do this AFTER your 1st train/test/split, no leakage here."
