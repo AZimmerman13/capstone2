@@ -279,7 +279,7 @@ if __name__ == '__main__':
         test_errors_rf.append(mean_squared_error(y_pred_test, full_df.y_test))
 
         train_score = rf.score(full_df.X_std, full_df.y_train)
-        test_score = rf.score(full_df.Xscaler(full_df.X_test), full_df.y_test)
+        test_score = rf.score(full_df.Xscaler.transform(full_df.X_test), full_df.y_test)
 
         print(f"\nTrain R2: {train_score}")
         print(f"\nTest R2: {test_score}")
