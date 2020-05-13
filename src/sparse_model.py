@@ -26,10 +26,14 @@ if __name__ == '__main__':
     energy.my_reset_index()
     weather.my_reset_index()
 
+    # Clean Catagoricals
+    weather.clean_categoricals(['weather_main'])
+
     # Drop columns
     weather_drop_cols = ['weather_icon', 'weather_description', 'weather_id', 'temp_min', 
                     'temp_max', 'pressure', 'humidity',
-                    'rain_1h', 'rain_3h', 'snow_3h', 'clouds_all']
+                    'rain_1h', 'rain_3h', 'snow_3h', 'clouds_all', 'dust', 'fog', 'haze', 'mist', 'rain', 'smoke', 'snow', 'squall',
+       'thunderstorm']
     
     energy_drop_cols = ['generation fossil coal-derived gas','generation fossil oil shale', 
                         'generation fossil peat', 'generation geothermal',
@@ -47,8 +51,7 @@ if __name__ == '__main__':
     for i in energy.df.columns:
         energy.df[i].fillna(method='pad', inplace=True)
 
-    # Clean Catagoricals
-    weather.clean_categoricals(['weather_main'])
+    
 
     #Featurizing Cities
     city_df_list = weather.featurize_cities(['Valencia', 'Madrid', "Bilbao", ' Barcelona', 'Seville'])
