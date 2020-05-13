@@ -27,7 +27,7 @@ if __name__ == '__main__':
     weather.my_reset_index()
 
     # Drop columns
-    weather_drop_cols = ['weather_icon', 'weather_main', 'weather_id', 'temp_min', 
+    weather_drop_cols = ['weather_icon', 'weather_description', 'weather_id', 'temp_min', 
                     'temp_max', 'pressure', 'humidity',
                     'rain_1h', 'rain_3h', 'snow_3h', 'clouds_all']
     
