@@ -78,7 +78,7 @@ if __name__ == '__main__':
     full_df = energy.merge_dfs(all_cities_df.df)
 
     plot_corr_matrix(full_df.df)
-    plt.savefig('images/full_corr.png')
+    plt.savefig('images/full_corr_sparse.png')
     plt.close()
 
     get_top_abs_correlations(full_df.df, 10)
@@ -89,11 +89,11 @@ if __name__ == '__main__':
     # full_df.create_holdout()
 
     plot_corr_matrix(energy.df)
-    plt.savefig('images/clean_energy_corr.png')
+    plt.savefig('images/clean_energy_corr_sparse.png')
     # plt.show()
     plt.close()
     plot_corr_matrix(pd.concat([all_cities_df.df, full_df.y], axis=1))
-    plt.savefig('images/clean_weather_corr.png')
+    plt.savefig('images/clean_weather_corr_sparse.png')
     # plt.show()
     plt.close()
 
