@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
     X_train, X_test, y_train, y_test = train_test_split(X, y)
 
-    pipe = SKPipe([('scaler', StandardScaler()), ('RForest', RandomForestRegressor(num_estimators=20, n_jobs=-1))], verbose=True)
+    pipe = SKPipe([('scaler', StandardScaler()), ('RForest', RandomForestRegressor(n_estimators=20, n_jobs=-1))], verbose=True)
     pipe.fit(X_train, y_train)
     score = pipe.score(X_test, y_test)
 
