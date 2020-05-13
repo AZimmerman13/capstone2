@@ -5,10 +5,12 @@ import matplotlib
 import importlib
 matplotlib.use("Agg")
 from sklearn.model_selection import train_test_split, KFold
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Lasso, LassoCV
 from sklearn.decomposition import PCA
 from src.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
@@ -66,7 +68,7 @@ def scree_plot(ax, pca, n_components_to_plot=8, title=None): # Credit: Galvanize
     ax.scatter(ind, vals, color='blue', s=50)
 
     for i in range(num_components):
-        ax.annotate(r"{:2.2f}%".format(vals[i]), 
+        ax.annotate(r"{:2.2f}".format(vals[i]), 
                    (ind[i]+0.2, vals[i]+0.005), 
                    va="bottom", 
                    ha="center", 
@@ -241,10 +243,31 @@ if __name__ == '__main__':
     X_pca = pca.fit_transform(full_df.X_std)
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    scree_plot(ax, pca, title="Scree Plot for Digits Principal Components")
+    scree_plot(ax, pca, title="Scree Plot for Energy Principal Components")
     plt.savefig('images/pca_full.png')
 
     print('all done.')
 
 
     
+    print("Random Forest")
+
+    num_estimator_list = [1,2,5,10,20,40,100,500,1000]
+    for num_est in num_estimator_list:
+        rf = RandomForestRegressor(n_estimators = num_est, n_jobs=-1)
+        rf.fit(full_df.X_std, full_df.y_train)
+        y_pred_test =  rf.predict(full_df.standardize(full_df.X_test))
+        y_pred_train =  rf.predict(full_df.standardize(full_df.X_train))
+    
+    train_errors_rf.append(mean_squared_error(y_pred_train, y_train)) 
+    test_errors_rf.append(mean_squared_error(y_pred_test, y_test))
+
+    plt.figure(figsize=(15,10))
+    plt.plot(num_estimator_list, train_errors_rf, label='Training MSE')
+    plt.plot(num_estimator_list, test_errors_rf, label='Test MSE')
+    plt.xlabel('Number of Estimators')
+    plt.ylabel('MSE')
+    plt.xscale('log')
+    plt.title('Random Forest MSE vs. Num Estimators')
+    plt.legend()
+    plt.savefig('images/rf_num_estimator_plot.png')
