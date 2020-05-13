@@ -265,7 +265,7 @@ if __name__ == '__main__':
     
     print("\nRandom Forest")
 
-    num_estimator_list = [1,2,5,10,20]
+    num_estimator_list = [10,20]
     train_errors_rf = []
     test_errors_rf = []
     for i, num_est in enumerate(num_estimator_list):
@@ -278,9 +278,17 @@ if __name__ == '__main__':
         train_errors_rf.append(mean_squared_error(y_pred_train, full_df.y_train)) 
         test_errors_rf.append(mean_squared_error(y_pred_test, full_df.y_test))
 
-    plot_num_estimators_mse(num_estimator_list, train_errors_rf, test_errors_rf)
-    plt.savefig('images/rf_num_estimator_plot_short_list.png')
-    plt.close()
+        train_score = rf.score(rf.score(full_df.X_std, full_df.y_train))
+        test_score = rf.score(full_df.Xscaler(full_df.X_test), full_df.y_test)
+
+        print(f"\nTrain R2: {train_score}")
+        print(f"\nTest R2: {test_score}")
+
+    # plot_num_estimators_mse(num_estimator_list, train_errors_rf, test_errors_rf)
+    # plt.savefig('images/rf_num_estimator_plot_short_list.png')
+    # plt.close()
+
+    
 
 
 

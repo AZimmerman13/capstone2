@@ -69,7 +69,7 @@ class Pipeline(object):
     def clean_categoricals(self, cols):
         'takes a list of columns to make dummies and drop from the df'
         for i in cols:
-            dummies = pd.get_dummies(self.df[i])
+            dummies = pd.get_dummies(self.df[i], drop_first=True)
             self.df = pd.concat([self.df, dummies], axis=1)
             self.df.drop(i, inplace=True, axis=1)
 
