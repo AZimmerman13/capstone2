@@ -34,7 +34,7 @@ I had a suspicion that weather_description and weather_id were redundant as they
 | mist                         | 701        | mist           |
 | fog                          | 741        | fog            |
 
-weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.  I opted to use weather_description and discard the other two.
+weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.  I opted to use weather_main and discard the other two to reduce dimensionality.
 
 
 The weather data was for the 5 largest cities in Spain:

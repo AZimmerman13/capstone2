@@ -29,20 +29,7 @@ if __name__ == '__main__':
     # Drop columns
     weather_drop_cols = ['weather_icon', 'weather_main', 'weather_id', 'temp_min', 
                     'temp_max', 'pressure', 'humidity',
-                    'rain_1h', 'rain_3h', 'snow_3h', 'clouds_all', 'drizzle', 'dust',
-                    'few clouds', 'fog', 'haze', 'heavy intensity drizzle',
-                    'heavy intensity rain', 'heavy intensity shower rain', 'heavy snow',
-                    'light intensity drizzle', 'light intensity drizzle rain',
-                    'light intensity shower rain', 'light rain', 'light rain and snow',
-                    'light shower sleet', 'light shower snow', 'light snow',
-                    'light thunderstorm', 'mist', 'moderate rain', 'overcast clouds',
-                    'proximity drizzle', 'proximity moderate rain', 'proximity shower rain',
-                    'proximity thunderstorm', 'ragged shower rain', 'rain and drizzle',
-                    'rain and snow', 'sand dust whirls', 'scattered clouds', 'shower rain',
-                    'shower sleet', 'sky is clear', 'sleet', 'smoke', 'snow', 'squalls',
-                    'thunderstorm', 'thunderstorm with heavy rain',
-                    'thunderstorm with light rain', 'thunderstorm with rain',
-                    'very heavy rain']
+                    'rain_1h', 'rain_3h', 'snow_3h', 'clouds_all']
     
     energy_drop_cols = ['generation fossil coal-derived gas','generation fossil oil shale', 
                         'generation fossil peat', 'generation geothermal',
@@ -61,7 +48,7 @@ if __name__ == '__main__':
         energy.df[i].fillna(method='pad', inplace=True)
 
     # Clean Catagoricals
-    weather.clean_categoricals(['weather_description'])
+    weather.clean_categoricals(['weather_main'])
 
     #Featurizing Cities
     city_df_list = weather.featurize_cities(['Valencia', 'Madrid', "Bilbao", ' Barcelona', 'Seville'])
