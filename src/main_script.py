@@ -280,9 +280,11 @@ if __name__ == '__main__':
 
         train_score = rf.score(full_df.X_std, full_df.y_train)
         test_score = rf.score(full_df.Xscaler.transform(full_df.X_test), full_df.y_test)
+        holdout score = rf.score(full_df.Xscaler.transform(full_df.X_holdout), full_df.y_holdout)
 
         print(f"\nTrain R2: {train_score}")
         print(f"\nTest R2: {test_score}")
+        print(f"\nHoldout R2: {holdout_score}")
 
     # plot_num_estimators_mse(num_estimator_list, train_errors_rf, test_errors_rf)
     # plt.savefig('images/rf_num_estimator_plot_short_list.png')
