@@ -111,9 +111,11 @@ if __name__ == '__main__':
     for model in models:
         pipe = SKPipe([('scaler', StandardScaler()), (f'{model}', model)], verbose=True)
         pipe.fit(X_train, y_train)
-        score = pipe.score(X_test, y_test)
-
-        print(f"{model} \n\nscore = {score}\n\n\n")
+        
+        train_score = pipe.score(X_train, y_train)
+        test_score = pipe.score(X_test, y_test)
+        
+        print(f"{model} \n\ntest score = {test_score}\n train score = {train_score}\n\n")
 
     # # PCA
     # print("\nLet's try PCA")
