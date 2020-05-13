@@ -17,7 +17,7 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
 if __name__ == '__main__':
-     print("Loading Data")
+    print("Loading Data")
     # read in files from s3 bucket
     energy = Pipeline('s3://ajzcap2/energy_dataset.csv')
     weather = Pipeline('s3://ajzcap2/weather_features.csv')
