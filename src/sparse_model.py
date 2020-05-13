@@ -106,22 +106,22 @@ if __name__ == '__main__':
 
     X_train, X_test, y_train, y_test = train_test_split(X, y)
     print('\n trying a few models')
-    models = [RandomForestRegressor(n_estimators=20, n_jobs=-1), Lasso(alpha=1), Ridge(), LinearRegression(n_jobs=-1)]
+    models = [RandomForestRegressor(n_estimators=20, n_jobs=-1, max_features='sqrt'), Lasso(alpha=1), Ridge(), LinearRegression(n_jobs=-1)]
 
     for model in models:
         pipe = SKPipe([('scaler', StandardScaler()), (f'{model}', model)], verbose=True)
         pipe.fit(X_train, y_train)
         score = pipe.score(X_test, y_test)
 
-        print(f"{model} score = {score}")
+        print(f"{model} \n\nscore = {score}\n\n\n")
 
-    # PCA
-    print("\nLet's try PCA")
-    pca = PCA(n_components=50)
-    X_pca = pca.fit_transform(full_df.X_std)
+    # # PCA
+    # print("\nLet's try PCA")
+    # pca = PCA(n_components=50)
+    # X_pca = pca.fit_transform(full_df.X_std)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    scree_plot(ax, pca, title="Scree Plot for Energy Principal Components")
-    plt.savefig('images/pca_full_sparse.png')
-    plt.close()
+    # fig, ax = plt.subplots(figsize=(10, 6))
+    # scree_plot(ax, pca, title="Scree Plot for Energy Principal Components")
+    # plt.savefig('images/pca_full_sparse.png')
+    # plt.close()
     
