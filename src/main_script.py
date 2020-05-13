@@ -22,11 +22,11 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 def plot_corr_matrix(df):
     f = plt.figure(figsize=(19, 15))
     plt.matshow(df.corr(), fignum=f.number)
-    plt.xticks(range(df.shape[1]), df.columns, fontsize=14, rotation=90)
-    plt.yticks(range(df.shape[1]), df.columns, fontsize=14)
+    plt.xticks(range(df.shape[1]), df.columns, fontsize=16, rotation=90)
+    plt.yticks(range(df.shape[1]), df.columns, fontsize=16)
     cb = plt.colorbar()
     cb.ax.tick_params(labelsize=14)
-    plt.title('Correlation Matrix', fontsize=16)
+    plt.xlabel('Correlation Matrix', fontsize=22)
     # plt.tight_layout()
 
 def get_redundant_pairs(df):

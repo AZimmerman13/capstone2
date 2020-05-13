@@ -6,7 +6,7 @@ import importlib
 matplotlib.use("Agg")
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import Lasso, LassoCV
+from sklearn.linear_model import Lasso, LassoCV, Ridge, LinearRegression
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline as SKPipe
 from src.pipeline import Pipeline
@@ -105,10 +105,23 @@ if __name__ == '__main__':
     y = full_df.y
 
     X_train, X_test, y_train, y_test = train_test_split(X, y)
+    print('\n trying a few models')
+    models = [RandomForestRegressor(n_estimators=20, n_jobs=-1), Lasso(alpha=1), Ridge(), LinearRegression(n_jobs=-1)]
 
-    pipe = SKPipe([('scaler', StandardScaler()), ('RForest', RandomForestRegressor(n_estimators=20, n_jobs=-1))], verbose=True)
-    pipe.fit(X_train, y_train)
-    score = pipe.score(X_test, y_test)
+    for model in models:
+        pipe = SKPipe([('scaler', StandardScaler()), (f'{model}', model)], verbose=True)
+        pipe.fit(X_train, y_train)
+        score = pipe.score(X_test, y_test)
 
-    print(f"pipelineForest score = {score}")
+        print(f"{model} score = {score}")
+
+    # PCA
+    print("\nLet's try PCA")
+    pca = PCA(n_components=50)
+    X_pca = pca.fit_transform(full_df.X_std)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    scree_plot(ax, pca, title="Scree Plot for Energy Principal Components")
+    plt.savefig('images/pca_full_sparse.png')
+    plt.close()
     

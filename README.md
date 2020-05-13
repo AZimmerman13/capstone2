@@ -1,15 +1,38 @@
 # capstone2
+## Motivation
+
+Energy production is the cause of massive quantities of greenhouse gasses flowing into our atmosphere.  For many years, solar panels and wind turbines have been hailed as the harbinger of a renewable energy revolution that has only just very recently begun to take shape on a global scale.  The chief complaint from those hesitant to adopt or incorporate renewable energy sources was almost always their effect on energy prices.  At the time of writing, the world is engulfed in a novel Coronavirus pandemic that has shut down industry and social interaction accross the board.  This pandemic, and the countless videos of wildlife returning to abandoned street and uncluttered harbors, has sparked many conversations about what type of world we want to return to once it is safe to do so.
+
+If you ask yourself this question and the answer is either "a renewable world" **or** you just think data science is really cool, continue reading.  Short of nationalization, the best way to advocate for the incorporation of renewables is to understand how they affect energy prices.  In this project I endeavor to build a model that can predict energy prices based on generation and weather data and, hopefully, provide some insight as to how renewables affect those prices.
+
+## Data
+This publicly available dataset came in two seperate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in mid 2019.  Some previous work had been done to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.
+
+The weather dataset contained hourly data for the 5 largest cities in Spain: Madrid, Barcelona, Valencia, Sevilla, Bilbao.
+
+![image of those 5 cities in spain](images/map-of-spain.jpg)
+
+credit: https://www.alicante-spain.com/images/map-of-spain.jpg
+
+This dataset was relatively clean save for the ' ' in front of 'Barcelona' in every row, as well as what appeared to be a broken pressure gauge for about a month in Barcelona.
+
+The energy dataset contained similarly timestamped data, mostly concerning generation in MW for various energy sources throughout the country.  This dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 
+
+Both datasets covered a three-year period from January 2015 to December 2018.
+
+
+## Pipeline and Workflow
+
+I gave myself the challenge of working with the AWS suite on this project, taking the opportunity to gain familiarity with these widely used tools.  I stored my data and wrote results remotely into an S3 bucket, and did all model training and manipulation on the full dataset in and ubuntu EC2 instance with anaconda3 and git.  I wrote code mostly on my local machine, making small adjustments in vim on the EC2 instance when necessary.  I followed a basic git workflow, essentially treating my local and virtual machines as if they were partners working on the same project.
+
+I created a Pipeline class to load data in from S3 (using the s3fs library) and apply the necessary cleaning and transformations.  I also worked a bit with SKlearn's built-in Pipeline class.  The biggest speed-bump at this stage was turning the 'city_name' feature into a series of features that represented weather data for each city.  While this solved the probem of having duplicate indices (one for each city at each timestamp), it sent my dimensionality skyward very quickly.
+
 
 ## EDA
-There were several columns that did not appear useful, such as 'weather_icon' which, according to the data description, contained only information about the "Weather icon code for website".  I removed this column and sought to further reduce dimensionality among the categorical features.
-array(['01n', '01d', '01', '02n', '02d', '02', '03', '04n', '04', '10n',
-       '03n', '10', '04d', '03d', '10d', '50d', '09n', '11d', '11n',
-       '09d', '50n'], dtype=object)
 
+EDA turned out to be very useful for narrowing down my long list of features into something a bit less computationally expensive and more interpretable.
 
-![](images/clean_energy_corr.png)
-
-I had a suspicion that weather_description and weather_id were redundant as they contain a similar number of categories.  Some simple exploration confirmed my suspicion, and found additional collinearity/sub categorization in the weather_main column, clear upon moderately close inspection:
+I had a suspicion that weather_description and weather_id were redundant as they contained a similar number of categories.  Some simple exploration confirmed this and found additional collinearity/sub categorization in the weather_main column, clear upon moderately close inspection:
 
 
 | Weather Description          | Weather ID | Weather 'main' |
@@ -34,32 +57,38 @@ I had a suspicion that weather_description and weather_id were redundant as they
 | mist                         | 701        | mist           |
 | fog                          | 741        | fog            |
 
-weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.  I opted to use weather_main and discard the other two to reduce dimensionality.
+weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.  I opted to one-hot encode weather_main and discard the other two to minimize dimensionality.
 
 
-The weather data was for the 5 largest cities in Spain:
+### Correlation Matrices
 
-Madrid, Barcelona, Valencia, Sevilla, Bilbao
+To avoid making a single, massive, unreadable correlation matrix with all of my features, I decided to add price to the weather DataFrame and make a separate, moderately-readable one for each subset.  When it comes to weather, it appears that wind speed and wind degree are the only features which are routinely correlated with energy price (bottom row).
 
-This dataset was relatively clean save for the ' ' in front of 'Barcelona' in every row, which made for a nice little trouble-shooting session.
+![](images/clean_weather_corr_sparse.png)
 
-Barcelona pressure contained ~45 rows with reading between 1 and 2 orders of magnitude above the maximum for all other cities.
+Energy
 
-no snow in seville or barcelona,
+![](images/clean_energy_corr.png)
 
 
-
-perhaps unsurprisingly, temp, max_temp, and min_temp were highly correlated.  The final straw in removing these columns was seeing them with variance inflation factors over 500.
 ### VIF
+perhaps unsurprisingly, temp, max_temp, and min_temp were highly correlated.  The final straw in removing these columns was seeing them with variance inflation factors over 500.
 
 ### PCA: 
 first 8 priciple componants make up 40% of the variance, not great.  There is definitely some signal, but it might take more featurization than I originally planned to get a model working well.
 
-The energy dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 
+
 
 ### Random Forest
 
-*tuning the model*
+**tuning the model**
 ![num estimators plot](images/rf_num_estimator_plot.png)
 
-it appears that the best num_estimators here is either 10 or 20, since I am training on aws i will go with 20.
+It appears that a case can be made that the best num_estimators here is just about 10.
+
+When i ran the model with just 10 estimators, I achieved the following results:
+
+| Train R^2          | Test R^2 | Holdout R^2|
+|------------------------------|------------|----------------|
+| 0.973                | 0.853        | 0.850          |
+| few clouds                   | 801        | clouds         |
