@@ -260,8 +260,11 @@ if __name__ == '__main__':
         y_pred_test =  rf.predict(full_df.Xscaler.fit_transform(full_df.X_test))
         y_pred_train =  rf.predict(full_df.Xscaler.fit_transform(full_df.X_train))
     
-    train_errors_rf.append(mean_squared_error(y_pred_train, y_train)) 
-    test_errors_rf.append(mean_squared_error(y_pred_test, y_test))
+    train_errors_rf = []
+    test_errors_rf = []
+
+    train_errors_rf.append(mean_squared_error(y_pred_train, full_df.y_train)) 
+    test_errors_rf.append(mean_squared_error(y_pred_test, full_df.y_test))
 
     plt.figure(figsize=(15,10))
     plt.plot(num_estimator_list, train_errors_rf, label='Training MSE')
