@@ -7,6 +7,8 @@ array(['01n', '01d', '01', '02n', '02d', '02', '03', '04n', '04', '10n',
        '09d', '50n'], dtype=object)
 
 
+![](images/clean_energy_corr.png)
+
 I had a suspicion that weather_description and weather_id were redundant as they contain a similar number of categories.  Some simple exploration confirmed my suspicion, and found additional collinearity/sub categorization in the weather_main column, clear upon moderately close inspection:
 
 
@@ -59,3 +61,5 @@ The energy dataset was incomplete in a few areas, namely that the 'generation fo
 
 *tuning the model*
 ![num estimators plot](images/rf_num_estimator_plot.png)
+
+it appears that the best num_estimators here is either 10 or 20, since I am training on aws i will go with 20.
