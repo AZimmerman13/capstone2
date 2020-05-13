@@ -133,7 +133,7 @@ if __name__ == '__main__':
                 'criterion':('mse', 'mae'), 
                 'max_depth': (None, 5, 7, 10), 
                 'max_features': ('auto', 'sqrt', 'log2')}
-    rf = RandomForestRegressor()
+    rf = RandomForestRegressor(verbose=True, n_jobs=-1)
     grid = GridSearchCV(rf, parameters, verbose=1, n_jobs=-1)
 
     grid.fit(X_train,y_train)
