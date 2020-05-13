@@ -130,7 +130,6 @@ if __name__ == '__main__':
     
     print('Gridsearch time, go get some coffee')
     parameters = {'n_estimators': (2, 5, 10, 20, 50, 100), 
-                'n_jobs':(-1), 
                 'criterion':('mse', 'mae'), 
                 'max_depth': (None, 5, 7, 10), 
                 'max_features': ('auto', 'sqrt', 'log2')}
