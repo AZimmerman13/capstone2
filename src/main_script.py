@@ -82,6 +82,18 @@ def scree_plot(ax, pca, n_components_to_plot=8, title=None): # Credit: Galvanize
     if title is not None:
         ax.set_title(title, fontsize=16)
 
+
+def plot_num_estimators_mse(num_estimator_list, train_errors_rf, test_errors_rf):
+    plt.figure(figsize=(15,10))
+    plt.plot(num_estimator_list, train_errors_rf, label='Training MSE')
+    plt.plot(num_estimator_list, test_errors_rf, label='Test MSE')
+    plt.xlabel('Number of Estimators')
+    plt.ylabel('MSE')
+    plt.xscale('linear')
+    plt.title('Random Forest MSE vs. Num Estimators')
+    plt.legend()
+    
+
 if __name__ == '__main__':
     # energy_df = pd.read_csv('data/energy_dataset.csv',index_col=0, parse_dates=[0])
     # weather_df = pd.read_csv('data/weather_features.csv',index_col=0, parse_dates=[0])
@@ -129,6 +141,8 @@ if __name__ == '__main__':
     # plt.savefig('images/weather_corr.png')
     # # plt.show()
     # plt.close()
+
+
     # Clean Catagoricals
     weather.clean_categoricals(['weather_description'])
 
@@ -157,9 +171,7 @@ if __name__ == '__main__':
     
     # Transformations
     print('\nPerforming transformations')
-    weather_cols = ['weather_description', 'weather_main', 'weather_id']
-    # weather.clean_categoricals(weather_cols)
-    energy_cols = []
+  
 
     # Merge energy with the featurized cities DF to make the complete DataFrame
     full_df = energy.merge_dfs(all_cities_df.df)
@@ -207,7 +219,7 @@ if __name__ == '__main__':
     # plt.show()
     plt.close()
 
-    print("Lasso time, yee-haw")
+    print("\nLasso time, yee-haw")
    
     
 
@@ -227,7 +239,7 @@ if __name__ == '__main__':
     
 
 # VIF
-    print("Checking VIF")
+    print("\nChecking VIF")
     vif = pd.DataFrame()
     vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
     vif["features"] = full_df.X.columns
@@ -238,21 +250,22 @@ if __name__ == '__main__':
 
 
 # PCA
-    print("Let's try PCA")
+    print("\nLet's try PCA")
     pca = PCA(n_components=50)
     X_pca = pca.fit_transform(full_df.X_std)
 
     fig, ax = plt.subplots(figsize=(10, 6))
     scree_plot(ax, pca, title="Scree Plot for Energy Principal Components")
     plt.savefig('images/pca_full.png')
+    plt.close()
 
-    print('all done.')
+   
 
 
     
-    print("Random Forest")
+    print("\nRandom Forest")
 
-    num_estimator_list = [1,2,5,10,20,40,100,500]
+    num_estimator_list = [1,2,5,10,20]
     train_errors_rf = []
     test_errors_rf = []
     for i, num_est in enumerate(num_estimator_list):
@@ -265,12 +278,10 @@ if __name__ == '__main__':
         train_errors_rf.append(mean_squared_error(y_pred_train, full_df.y_train)) 
         test_errors_rf.append(mean_squared_error(y_pred_test, full_df.y_test))
 
-    plt.figure(figsize=(15,10))
-    plt.plot(num_estimator_list, train_errors_rf, label='Training MSE')
-    plt.plot(num_estimator_list, test_errors_rf, label='Test MSE')
-    plt.xlabel('Number of Estimators')
-    plt.ylabel('MSE')
-    plt.xscale('log')
-    plt.title('Random Forest MSE vs. Num Estimators')
-    plt.legend()
-    plt.savefig('images/rf_num_estimator_plot.png')
+    plot_num_estimators_mse(num_estimator_list, train_errors_rf, test_errors_rf)
+    plt.savefig('images/rf_num_estimator_plot_short_list.png')
+    plt.close()
+
+
+
+    print('\nall done.')

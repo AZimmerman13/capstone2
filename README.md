@@ -48,8 +48,14 @@ no snow in seville or barcelona,
 
 
 perhaps unsurprisingly, temp, max_temp, and min_temp were highly correlated.  The final straw in removing these columns was seeing them with variance inflation factors over 500.
+### VIF
 
-
-PCA: first 8 priciple componants make up 40% of the variance, not great.  There is definitely some signal, but it might take more featurization than I originally planned to get a model working well.
+### PCA: 
+first 8 priciple componants make up 40% of the variance, not great.  There is definitely some signal, but it might take more featurization than I originally planned to get a model working well.
 
 The energy dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 
+
+### Random Forest
+
+*tuning the model*
+![num estimators plot](images/rf_num_estimator_plot.png)

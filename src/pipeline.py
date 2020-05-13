@@ -70,7 +70,7 @@ class Pipeline(object):
         'takes a list of columns to make dummies and drop from the df'
         for i in cols:
             dummies = pd.get_dummies(self.df[i])
-            pd.concat([self.df, dummies], axis=1)
+            self.df = pd.concat([self.df, dummies], axis=1)
             self.df.drop(i, inplace=True, axis=1)
 
     def standardize(self, X):
