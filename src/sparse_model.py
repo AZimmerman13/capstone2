@@ -81,7 +81,7 @@ if __name__ == '__main__':
     plt.savefig('images/full_corr_sparse.png')
     plt.close()
 
-    get_top_abs_correlations(full_df.df, 10)
+    # get_top_abs_correlations(full_df.df, 10)
 
 
     print('\nCreating train, test, and holdout sets')
