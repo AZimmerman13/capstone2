@@ -185,14 +185,16 @@ if __name__ == '__main__':
     best_alpha = reg.alpha_
     coefs = reg.coef_
     print(f"Best alpha = {best_alpha}")
-    print('all done.')
+    
 
 # VIF
     vif = pd.DataFrame()
     vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
-    vif["features"] = full_df.df.columns
+    vif["features"] = full_df.X.columns
 
     print(vif.sort_values('VIF Factor', ascending=False).head(20).round(1))
+
+    print('all done.')
 
 
     
