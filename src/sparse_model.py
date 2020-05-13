@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Lasso, LassoCV, Ridge, LinearRegression
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline as SKPipe
+from sklearn.model_selection import GridSearchCV
 from src.pipeline import Pipeline
 from src.main_script import plot_corr_matrix, scree_plot, plot_num_estimators_mse
 from sklearn.preprocessing import StandardScaler
@@ -127,3 +128,17 @@ if __name__ == '__main__':
     # plt.savefig('images/pca_full_sparse.png')
     # plt.close()
     
+    print('Gridsearch time, go get some coffee')
+    parameters = {'n_estimators': (2, 5, 10, 20, 50, 100), 
+                'n_jobs':(-1), 
+                'criterion':('mse', 'mae'), 
+                'max_depth': (None, 5, 7, 10), 
+                'max_features': ('auto', 'sqrt', 'log2'}
+    rf = RandomForestRegressor()
+    grid = GridSearchCV(rf, parameters, verbose=1, n_jobs=-1)
+
+    grid.fit(X_train,y_train)
+    gridscore_test = grid.score(X_test, y_test)
+    grisdcore_train = grid.score(X_train, y_train)
+    print(f"\n\n\nR2 test with best params = {gridscore_test}")
+    print(f"\n\nR2 train with best params = {grisdcore_train}")
