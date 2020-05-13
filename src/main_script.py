@@ -6,6 +6,7 @@ import importlib
 matplotlib.use("Agg")
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.linear_model import Lasso, LassoCV
+from sklearn.decomposition import PCA
 from src.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -41,7 +42,43 @@ def get_top_abs_correlations(df, n=5):
      au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=False)
      return au_corr[0:n]
 
+def scree_plot(ax, pca, n_components_to_plot=8, title=None): # Credit: Galvanize Data Science
+    """Make a scree plot showing the variance explained (i.e. varaince of the projections) for the principal components in a fit sklearn PCA object.
+    
+    Parameters
+    ----------
+    ax: matplotlib.axis object
+      The axis to make the scree plot on.
+      
+    pca: sklearn.decomposition.PCA object.
+      A fit PCA object.
+      
+    n_components_to_plot: int
+      The number of principal components to display in the skree plot.
+      
+    title: str
+      A title for the skree plot.
+    """
+    num_components = pca.n_components_
+    ind = np.arange(num_components)
+    vals = pca.explained_variance_ratio_
+    ax.plot(ind, vals, color='blue')
+    ax.scatter(ind, vals, color='blue', s=50)
 
+    for i in range(num_components):
+        ax.annotate(r"{:2.2f}%".format(vals[i]), 
+                   (ind[i]+0.2, vals[i]+0.005), 
+                   va="bottom", 
+                   ha="center", 
+                   fontsize=12)
+
+    ax.set_xticklabels(ind, fontsize=12)
+    ax.set_ylim(0, max(vals) + 0.05)
+    ax.set_xlim(0 - 0.45, n_components_to_plot + 0.45)
+    ax.set_xlabel("Principal Component", fontsize=12)
+    ax.set_ylabel("Variance Explained (%)", fontsize=12)
+    if title is not None:
+        ax.set_title(title, fontsize=16)
 
 if __name__ == '__main__':
     # energy_df = pd.read_csv('data/energy_dataset.csv',index_col=0, parse_dates=[0])
@@ -168,7 +205,7 @@ if __name__ == '__main__':
     # plt.show()
     plt.close()
 
-    print("Lasso time: yee-haw")
+    print("Lasso time, yee-haw")
    
     
 
@@ -188,11 +225,24 @@ if __name__ == '__main__':
     
 
 # VIF
+    print("Checking VIF")
     vif = pd.DataFrame()
     vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
     vif["features"] = full_df.X.columns
 
-    print(vif.sort_values('VIF Factor', ascending=False).head(20).round(1))
+    # print(vif.sort_values('VIF Factor', ascending=False).head(20).round(1))
+
+
+
+
+# PCA
+    print("Let's try PCA")
+    pca = PCA(n_components=50)
+    X_pca = pca.fit_transform(full_df.X_std)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    scree_plot(ax, pca, title="Scree Plot for Digits Principal Components")
+    plt.savefig('images/pca_full.png')
 
     print('all done.')
 
