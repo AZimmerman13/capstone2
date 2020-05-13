@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     X_train, X_test, y_train, y_test = train_test_split(X, y)
     print('\n trying a few models')
-    models = [RandomForestRegressor(n_estimators=20, n_jobs=-1, max_features='sqrt'), Lasso(alpha=1), Ridge(), LinearRegression(n_jobs=-1)]
+    models = [RandomForestRegressor(n_estimators=20, n_jobs=-1, max_features='sqrt'), Lasso(alpha=0.03), Ridge(alpha=0.03), LinearRegression(n_jobs=-1)]
 
     for model in models:
         pipe = SKPipe([('scaler', StandardScaler()), (f'{model}', model)], verbose=True)
