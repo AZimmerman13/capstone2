@@ -252,9 +252,10 @@ if __name__ == '__main__':
     
     print("Random Forest")
 
-    num_estimator_list = [1,2,5,10,20,40,100,500,1000]
-    for num_est in num_estimator_list:
-        rf = RandomForestRegressor(n_estimators = num_est, n_jobs=-1)
+    num_estimator_list = [1,2,5,10,20,40,100,500]
+    for i, num_est in enumerate(num_estimator_list):
+        print(i)
+        rf = RandomForestRegressor(n_estimators = num_est, n_jobs=-1, verbose=True)
         rf.fit(full_df.X_std, full_df.y_train)
         y_pred_test =  rf.predict(full_df.Xscaler.fit_transform(full_df.X_test))
         y_pred_train =  rf.predict(full_df.Xscaler.fit_transform(full_df.X_train))
