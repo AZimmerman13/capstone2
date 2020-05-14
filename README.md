@@ -103,3 +103,8 @@ I used SKlearn's pipeline class to compare my random forest with 3 other models.
 | LinearRegression      | 0.44      | 0.43     |             |
 
 These results indicate that the relationships at play between the features and the target are not linear, and that in order to get highly interpretable results from a Linear Model, significant feature engineering would be required.
+
+
+## Interpretation
+
+![](images/feature_imp_sparse.png)
