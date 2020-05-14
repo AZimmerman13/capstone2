@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Lasso, LassoCV, Ridge, LinearRegression
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline as SKPipe
-from sklearn.inspection import permutation_importance
+from sklearn.inspection import permutation_importance, plot_partial_dependence
 from sklearn.model_selection import GridSearchCV
 from src.pipeline import Pipeline
 from src.main_script import plot_corr_matrix, scree_plot, plot_num_estimators_mse
@@ -159,6 +159,10 @@ if __name__ == '__main__':
     plt.savefig('images/feature_imp_sparse.png')
     plt.close()
 
+
+    plot_partial_dependence(rf, X_train, feature_names=feature_names)
+    plt.savefig('images/partial_dependence_sparse.png')
+    plt.close()
 
 
 
