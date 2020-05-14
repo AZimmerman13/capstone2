@@ -50,10 +50,6 @@ class Pipeline(object):
     def merge_dfs(self,new_df):
         return Pipeline.from_df(self.df.merge(new_df, right_index=True, left_index=True))
 
-    def consolidate(self, group_on):
-        gb = self.df.groupby(group_on)
-        self.grouped_avg = gb.mean()
-        return
 
     def featurize_cities(self, names):
         'returns a list of dataframes, one for each city.'

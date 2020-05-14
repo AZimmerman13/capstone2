@@ -18,6 +18,95 @@ from sklearn.metrics import mean_squared_error
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
+def gridsearch():
+    parameters = {'n_estimators': (2, 5, 10, 20, 30), 
+                'max_depth': (None, 5, 7), 
+                'max_features': ('auto', 'sqrt', 'log2')}
+    rf = RandomForestRegressor(verbose=True, n_jobs=-1)
+    grid = GridSearchCV(rf, parameters, verbose=1, n_jobs=-1)
+
+    grid.fit(X_train,y_train)
+    gridscore_test = grid.score(X_test, y_test)
+    grisdcore_train = grid.score(X_train, y_train)
+    return gridscore_train, gridscore_test, grid.best_params_
+
+def pdplots():
+
+    first_pdp = ['generation fossil gas', 
+            'generation fossil hard coal', 'total load actual'] 
+             
+    second_pdp = ['generation other renewable',
+             'generation solar']
+
+    third_pdp = ['generation wind onshore', 'generation nuclear', 
+             'Madrid_wind_speed']
+
+    fourth_pdp = ['generation hydro pumped storage consumption']
+
+    plot_partial_dependence(rf, X_train, first_pdp, n_jobs=-1)
+    fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
+    fig.subplots_adjust(hspace=2.0, wspace=2.0)
+    plt.tight_layout()
+    plt.savefig('images/pd1.png')
+    plt.close()
+
+    plot_partial_dependence(rf, X_train, second_pdp, n_jobs=-1)
+    fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
+    fig.subplots_adjust(hspace=2.0, wspace=2.0)
+    plt.tight_layout()
+    plt.savefig('images/pd2.png')
+    plt.close()
+
+    plot_partial_dependence(rf, X_train, third_pdp, n_jobs=-1)
+    fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
+    fig.subplots_adjust(hspace=2.0, wspace=2.0)
+    plt.tight_layout()
+    plt.savefig('images/pd3.png')
+    plt.close()
+
+    plot_partial_dependence(rf, X_train, fourth_pdp, n_jobs=-1)
+    fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
+    fig.subplots_adjust(hspace=2.0, wspace=2.0)
+    plt.tight_layout()
+    plt.savefig('images/pd4.png')
+    plt.close()
+
+def compare_default_models():
+    models = [RandomForestRegressor(n_jobs=-1), Lasso(), Ridge(), LinearRegression(n_jobs=-1)]
+
+    for model in models:
+        pipe = SKPipe([('scaler', StandardScaler()), (f'{model}', model)], verbose=True)
+        pipe.fit(X_train, y_train)
+        
+        train_score = pipe.score(X_train, y_train)
+        test_score = pipe.score(X_test, y_test)
+        
+        print(f"{model} \n\ntest score = {test_score}\n train score = {train_score}\n\n")
+
+def pca_with_scree():
+    print("\nLet's try PCA")
+    pca = PCA(n_components=50)
+    X_pca = pca.fit_transform(full_df.X_std)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    scree_plot(ax, pca, title="Scree Plot for Energy Principal Components")
+    plt.savefig('images/pca_full_sparse.png')
+    plt.close()
+
+def feat_imp_plots():
+    feature_names = full_df.X.columns
+    feat_imp = pd.DataFrame({'feature_name':feature_names, 'feat_imp': rf.feature_importances_})
+    feat_imp.sort_values('feat_imp',ascending=False,inplace=True)
+    fig, ax = plt.subplots(1, figsize=(8,10))
+    ax.barh(feat_imp['feature_name'], feat_imp['feat_imp'])
+    ax.invert_yaxis()
+    ax.set_title('Random Forest Feature Importance')
+    plt.tight_layout()
+    plt.savefig('images/feature_imp_sparse.png')
+    plt.close()
+
+    
+
 if __name__ == '__main__':
     print("Loading Data")
     # read in files from s3 bucket
@@ -77,8 +166,8 @@ if __name__ == '__main__':
         all_cities_df.df.drop(i, axis=1, inplace=True)
 
     
-    # Transformations
-    print('\nPerforming transformations')
+    # Merge energy and weather
+    print('\nMerging dataset')
   
 
     # Merge energy with the featurized cities DF to make the complete DataFrame
@@ -88,12 +177,10 @@ if __name__ == '__main__':
     plt.savefig('images/full_corr_sparse.png')
     plt.close()
 
-    # get_top_abs_correlations(full_df.df, 10)
-
 
     print('\nCreating train, test, and holdout sets')
     full_df.getXy('price actual')
-    # full_df.create_holdout()
+    full_df.create_holdout()
 
     plot_corr_matrix(energy.df)
     plt.savefig('images/clean_energy_corr_sparse.png')
@@ -107,90 +194,41 @@ if __name__ == '__main__':
     X = full_df.X
     y = full_df.y
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
-    print('\n trying a few models')
-    # models = [RandomForestRegressor(n_estimators=20, n_jobs=-1, max_features='sqrt'), Lasso(alpha=0.03), Ridge(alpha=0.03), LinearRegression(n_jobs=-1)]
+    # X_train, X_test, y_train, y_test = train_test_split(X, y)
+    
+    X_train = full_df.X_train
+    y_train = full_df.y_train
+    X_test = full_df.X_test
+    y_test = full_df.y_test
+    X_holdout = full_df.X_holdout
+    y_holdout = full_df.y_holdout
 
-    # for model in models:
-    #     pipe = SKPipe([('scaler', StandardScaler()), (f'{model}', model)], verbose=True)
-    #     pipe.fit(X_train, y_train)
-        
-    #     train_score = pipe.score(X_train, y_train)
-    #     test_score = pipe.score(X_test, y_test)
-        
-    #     print(f"{model} \n\ntest score = {test_score}\n train score = {train_score}\n\n")
 
-    # # PCA
-    # print("\nLet's try PCA")
-    # pca = PCA(n_components=50)
-    # X_pca = pca.fit_transform(full_df.X_std)
 
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # scree_plot(ax, pca, title="Scree Plot for Energy Principal Components")
-    # plt.savefig('images/pca_full_sparse.png')
-    # plt.close()
+    print('\ntrying a few models')
+    # compare_default_models()
+
+    # PCA
+    # pca_with_scree()
     
     print('Gridsearch time, go get some coffee')
-    # parameters = {'n_estimators': (2, 5, 10, 20, 30), 
-    #             'max_depth': (None, 5, 7), 
-    #             'max_features': ('auto', 'sqrt', 'log2')}
-    # rf = RandomForestRegressor(verbose=True, n_jobs=-1)
-    # grid = GridSearchCV(rf, parameters, verbose=1, n_jobs=-1)
-
-    # grid.fit(X_train,y_train)
-    # gridscore_test = grid.score(X_test, y_test)
-    # grisdcore_train = grid.score(X_train, y_train)
+    # gridsearch()
 
     # grid.best_params_
     # Out[4]: {'max_depth': None, 'max_features': 'auto', 'n_estimators': 30}
 
-    rf = RandomForestRegressor(max_depth=None, max_features='auto', n_estimators=30)
+    rf = RandomForestRegressor(max_depth=None, max_features='auto', n_estimators=30, oob_score=True)
 
-    feature_names = full_df.X.columns
+    
     rf.fit(X_train, y_train)
 
-    feat_imp = pd.DataFrame({'feature_name':feature_names, 'feat_imp': rf.feature_importances_})
-    feat_imp.sort_values('feat_imp',ascending=False,inplace=True)
-    fig, ax = plt.subplots(1, figsize=(8,10))
-    ax.barh(feat_imp['feature_name'], feat_imp['feat_imp'])
-    ax.invert_yaxis()
-    ax.set_title('Random Forest Feature Importance')
-    plt.tight_layout()
-    plt.savefig('images/feature_imp_sparse.png')
-    plt.close()
+    print(f"R2 Train = {rf.score(X_train, y_train)}")
+    print(f"R2 Test = {rf.score(X_test, y_test)}")
+    print(f"R2 Holdout = {rf.score(X_holdout, y_holdout)}")
+    print(f"OOB score = {rf.oob_score_}")
 
-    first_pdp = ['generation fossil gas', 
-            'generation fossil hard coal', 'total load actual'] 
-             
-    second_pdp = ['generation other renewable', 'generation hydro pumped storage consumption',
-             'generation solar']
+    # Check feature importances
+    # feat_imp_plots()
 
-    third_pdp = ['generation wind onshore', 'generation nuclear', 
-             'Madrid_wind_speed']
-  
-
-    plot_partial_dependence(rf, X_train, first_pdp, n_jobs=-1)
-    fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
-    fig.subplots_adjust(hspace=2.0, wspace=2.0)
-    plt.tight_layout()
-    plt.savefig('images/pd1.png')
-    plt.close()
-
-    plot_partial_dependence(rf, X_train, second_pdp, n_jobs=-1)
-    fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
-    fig.subplots_adjust(hspace=2.0, wspace=2.0)
-    plt.tight_layout()
-    plt.savefig('images/pd2.png')
-    plt.close()
-
-    plot_partial_dependence(rf, X_train, third_pdp, n_jobs=-1)
-    fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
-    fig.subplots_adjust(hspace=2.0, wspace=2.0)
-    plt.tight_layout()
-    plt.savefig('images/pd3.png')
-    plt.close()
-
-
-
-    # print(f"\n\n\nR2 test with best params = {gridscore_test}")
-    # print(f"\n\nR2 train with best params = {grisdcore_train}")
+    # Check partial dependences
+    # pdplots()

@@ -89,7 +89,7 @@ first 8 priciple componants make up 40% of the variance, not great.  There is de
 From the outset, I was planning on using a random forest regressor on this data.  
 ![num estimators plot](images/rf_num_estimator_plot.png)
 
-It appears that a case can be made that the best num_estimators here is just about 10.  Running my RandomForest with 10 estimators produced surprisingly high r^2 scores for my train and test data, 0.97 and 0.82 respectively.  I came away from these results concerned that I had introduced some leakage that was causing my model to overfit.
+It appears that a case can be made that the best num_estimators here is just between 10 and 50.  A GridSearchCV reported 30 as the optimum values.  Running my RandomForest with 30 estimators produced surprisingly high r^2 scores for my train and test data, 0.97 and 0.82 respectively.  These were surprisingly good results, and I came away from them concerned that I had introduced some leakage that was causing my model to overfit.
 
 #### SKlearn Pipeline
 I used SKlearn's pipeline class to compare my random forest with 3 other models.  The similar results from the random forest via the sklearn pipeline reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline
@@ -106,11 +106,13 @@ These results indicate that the relationships at play between the features and t
 
 
 ## Interpretation
+I hoped to gain insight into the effect of my features on energy price by plotting the feature importances for my RandomForestRegressor.  The results of this are shown below, with gas and coal generation leading the list, followed by total load (demand), hydropower, and a features called 'generation other renewable' on which the data documentation sheds unfortunately little light.
 
 ![](images/feature_imp_sparse.png)
 
 total load is in kW, everything else is MW
 
 ![](images/pd1.png)
-![](images/pd2.png)
 ![](images/pd3.png)
+![](images/pd2.png)
+![](images/pd4.png)
