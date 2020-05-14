@@ -17,6 +17,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
+plt.style.use('fivethirtyeight')
+
 
 def gridsearch():
     parameters = {'n_estimators': (2, 5, 10, 20, 30), 
@@ -216,16 +218,26 @@ if __name__ == '__main__':
 
     # grid.best_params_
     # Out[4]: {'max_depth': None, 'max_features': 'auto', 'n_estimators': 30}
+    fig, ax = plt.subplots()
+    oob_diff = []
+    oob = []
 
-    rf = RandomForestRegressor(max_depth=9, max_features='auto', n_estimators=30, oob_score=True)
+    for i in list(range(20)):
 
+        rf = RandomForestRegressor(max_depth=i, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
+        rf.fit(X_train, y_train)
+
+        print(f"R2 Train = {rf.score(X_train, y_train)}")
+        print(f"R2 Test = {rf.score(X_test, y_test)}")
+        print(f"R2 Holdout = {rf.score(X_holdout, y_holdout)}")
+        print(f"OOB score = {rf.oob_score_}")
+        oob_diff.append(rf.score(X_train, y_train) - rf.oob_score_)
+
+    ax.plot(oob_diff, list(range(20)), color='red')
+    ax.plot(oob, list(range(20)), color='blue')
+    ax.set_title("Reducing OOB Error by limiting max_depth")
+    plt.savefig('images/oob.png')
     
-    rf.fit(X_train, y_train)
-
-    print(f"R2 Train = {rf.score(X_train, y_train)}")
-    print(f"R2 Test = {rf.score(X_test, y_test)}")
-    print(f"R2 Holdout = {rf.score(X_holdout, y_holdout)}")
-    print(f"OOB score = {rf.oob_score_}")
 
     # Check feature importances
     # feat_imp_plots()

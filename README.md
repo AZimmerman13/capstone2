@@ -92,12 +92,14 @@ From the outset, I was planning on using a random forest regressor on this data.
 It appears that a case can be made that the best num_estimators here is just between 10 and 50.  A GridSearchCV reported 30 as the optimum values.  Running my RandomForest with 30 estimators produced surprisingly high r^2 scores for my train and test data, 0.97 and 0.82 respectively.  These were surprisingly good results, and I came away from them concerned that I had introduced some leakage that was causing my model to overfit.
 
 #### SKlearn Pipeline
-I used SKlearn's pipeline class to compare my random forest with 3 other models.  The similar results from the random forest via the sklearn pipeline reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline
+I used SKlearn's pipeline class to compare my random forest with 3 other models.  The similar results from the random forest via the sklearn pipeline reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline.  
+
+In addition
 
 
-| Model                 | Train R^2 | Test R^2 | Holdout R^2 |
+| Model                 | Train R^2 | Test R^2 | OOB Score   |
 |-----------------------|-----------|----------|-------------|
-| RandomForestRegressor | 0.97      | 0.85     | 0.85        |
+| RandomForestRegressor | 0.97      | 0.85     | 0.81        |
 | Lasso(alpha=0.03)     | 0.44      | 0.43     |             |
 | Ridge(alpha=0.03)     | 0.44      | 0.43     |             |
 | LinearRegression      | 0.44      | 0.43     |             |
