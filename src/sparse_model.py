@@ -164,17 +164,12 @@ if __name__ == '__main__':
             'generation other renewable', 'generation hydro pumped storage consumption',
              'generation solar', 'generation wind onshore', 'generation nuclear', 
              'generation hydro run-of-river and poundage']
-    feature_names = ['fossil gas', 
-            'fossil hard coal', 'total load actual', 
-            'other renewable', 'hydro pumped storage consumption',
-             'solar', 'wind onshore', 'nuclear', 
-             'hydro RoR']
+  
 
-    plot_partial_dependence(rf, X_train, features_to_plot, n_jobs=-1, feature_names=feature_names)
-    fig = plt.gcf()
+    plot_partial_dependence(rf, X_train, features_to_plot, n_jobs=-1)
     fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
     plt.tight_layout()
-    fig.subplots_adjust(hspace=0.7)
+    fig.subplots_adjust(hspace=0.7, wspace=1.0)
     plt.savefig('images/partial_dependence_sparse.png')
     plt.close()
 
