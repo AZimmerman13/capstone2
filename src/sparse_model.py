@@ -17,7 +17,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
-plt.style.use('fivethirtyeight')
+# plt.style.use('fivethirtyeight')
 
 
 def gridsearch():
