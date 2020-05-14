@@ -160,9 +160,14 @@ if __name__ == '__main__':
     plt.close()
 
 
-    plot_partial_dependence(rf, X_train, ['generation fossil gas', 'generation fossil hard coal', 'total load actual', 'generation other renewable'], n_jobs=-1)
+    plot_partial_dependence(rf, X_train, ['generation fossil gas', 
+            'generation fossil hard coal', 'total load actual', 
+            'generation other renewable', 'generation hydro pumped storage consumption',
+             'generation solar', 'generation wind onshore', 'generation nuclear', 
+             'generation hydro run-of-river and poundage'], n_jobs=-1)
     fig = plt.gcf()
     fig.suptitle("Partial Dependence of energy price")
+    plt.tight_layout()
     plt.savefig('images/partial_dependence_sparse.png')
     plt.close()
 

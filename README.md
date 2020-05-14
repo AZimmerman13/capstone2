@@ -108,3 +108,5 @@ These results indicate that the relationships at play between the features and t
 ## Interpretation
 
 ![](images/feature_imp_sparse.png)
+
+total load is in kW, everything else is MW
