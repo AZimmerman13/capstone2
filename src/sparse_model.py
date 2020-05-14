@@ -222,7 +222,7 @@ if __name__ == '__main__':
     oob_diff = []
     oob = []
 
-    for i in list(range(20)):
+    for i in list(range(2,20)):
 
         rf = RandomForestRegressor(max_depth=i, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
         rf.fit(X_train, y_train)
@@ -233,8 +233,8 @@ if __name__ == '__main__':
         print(f"OOB score = {rf.oob_score_}")
         oob_diff.append(rf.score(X_train, y_train) - rf.oob_score_)
 
-    ax.plot(oob_diff, list(range(20)), color='red')
-    ax.plot(oob, list(range(20)), color='blue')
+    ax.plot(oob_diff, list(range(2,20)), color='red')
+    ax.plot(oob, list(range(2,20)), color='blue')
     ax.set_title("Reducing OOB Error by limiting max_depth")
     plt.savefig('images/oob.png')
     
