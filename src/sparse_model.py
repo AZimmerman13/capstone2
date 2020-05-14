@@ -221,11 +221,13 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
     oob_diff = []
     oob = []
-    rf = RandomForestRegressor(max_depth=i, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
-
+    rf = RandomForestRegressor(max_depth=None, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
+    rf.fit(X_train, y_train)
     # for i in list(range(2,20)):
+        # rf = RandomForestRegressor(max_depth=i, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
 
     #     rf.fit(X_train, y_train)
+
 
     #     print(f"R2 Train = {rf.score(X_train, y_train)}")
     #     print(f"R2 Test = {rf.score(X_test, y_test)}")
