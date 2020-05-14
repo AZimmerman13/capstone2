@@ -107,16 +107,16 @@ if __name__ == '__main__':
 
     X_train, X_test, y_train, y_test = train_test_split(X, y)
     print('\n trying a few models')
-    models = [RandomForestRegressor(n_estimators=20, n_jobs=-1, max_features='sqrt'), Lasso(alpha=0.03), Ridge(alpha=0.03), LinearRegression(n_jobs=-1)]
+    # models = [RandomForestRegressor(n_estimators=20, n_jobs=-1, max_features='sqrt'), Lasso(alpha=0.03), Ridge(alpha=0.03), LinearRegression(n_jobs=-1)]
 
-    for model in models:
-        pipe = SKPipe([('scaler', StandardScaler()), (f'{model}', model)], verbose=True)
-        pipe.fit(X_train, y_train)
+    # for model in models:
+    #     pipe = SKPipe([('scaler', StandardScaler()), (f'{model}', model)], verbose=True)
+    #     pipe.fit(X_train, y_train)
         
-        train_score = pipe.score(X_train, y_train)
-        test_score = pipe.score(X_test, y_test)
+    #     train_score = pipe.score(X_train, y_train)
+    #     test_score = pipe.score(X_test, y_test)
         
-        print(f"{model} \n\ntest score = {test_score}\n train score = {train_score}\n\n")
+    #     print(f"{model} \n\ntest score = {test_score}\n train score = {train_score}\n\n")
 
     # # PCA
     # print("\nLet's try PCA")
@@ -129,14 +129,32 @@ if __name__ == '__main__':
     # plt.close()
     
     print('Gridsearch time, go get some coffee')
-    parameters = {'n_estimators': (2, 5, 10, 20, 30), 
-                'max_depth': (None, 5, 7), 
-                'max_features': ('auto', 'sqrt', 'log2')}
-    rf = RandomForestRegressor(verbose=True, n_jobs=-1)
-    grid = GridSearchCV(rf, parameters, verbose=1, n_jobs=-1)
+    # parameters = {'n_estimators': (2, 5, 10, 20, 30), 
+    #             'max_depth': (None, 5, 7), 
+    #             'max_features': ('auto', 'sqrt', 'log2')}
+    # rf = RandomForestRegressor(verbose=True, n_jobs=-1)
+    # grid = GridSearchCV(rf, parameters, verbose=1, n_jobs=-1)
 
-    grid.fit(X_train,y_train)
-    gridscore_test = grid.score(X_test, y_test)
-    grisdcore_train = grid.score(X_train, y_train)
-    print(f"\n\n\nR2 test with best params = {gridscore_test}")
-    print(f"\n\nR2 train with best params = {grisdcore_train}")
+    # grid.fit(X_train,y_train)
+    # gridscore_test = grid.score(X_test, y_test)
+    # grisdcore_train = grid.score(X_train, y_train)
+
+    # grid.best_params_
+    # Out[4]: {'max_depth': None, 'max_features': 'auto', 'n_estimators': 30}
+
+    rf = RandomForestRegressor(max_depth=None, max_features='auto', n_estimators=30)
+
+    feature_names = full_df.columns
+
+    feat_imp = pd.DataFrame({'feature_name':feature_names, 'feat_imp': rf.feature_importances_})
+    feat_imp.sort_values('feat_imp',ascending=False,inplace=True)
+    fig, ax = plt.subplots(1, figsize=(8,10))
+    ax.barh(feat_imp['feature_name'], feat_imp['feat_imp'])
+    ax.invert_yaxis()
+    plt.savefig('images/feature_imp_sparse.png')
+    plt.close()
+
+
+
+    # print(f"\n\n\nR2 test with best params = {gridscore_test}")
+    # print(f"\n\nR2 train with best params = {grisdcore_train}")
