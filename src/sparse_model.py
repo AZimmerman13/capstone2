@@ -169,7 +169,7 @@ if __name__ == '__main__':
     plot_partial_dependence(rf, X_train, features_to_plot, n_jobs=-1)
     fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
     plt.tight_layout()
-    fig.subplots_adjust(hspace=0.7, wspace=1.0)
+    fig.subplots_adjust(hspace=2.0, wspace=2.0)
     plt.savefig('images/partial_dependence_sparse.png')
     plt.close()
 
