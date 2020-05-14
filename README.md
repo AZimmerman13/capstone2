@@ -99,7 +99,7 @@ In addition
 
 | Model                 | Train R^2 | Test R^2 | OOB Score   |
 |-----------------------|-----------|----------|-------------|
-| RandomForestRegressor | 0.97      | 0.85     | 0.81        |
+| RandomForestRegressor | 0.97      | 0.83     | 0.81        |
 | Lasso(alpha=0.03)     | 0.44      | 0.43     |             |
 | Ridge(alpha=0.03)     | 0.44      | 0.43     |             |
 | LinearRegression      | 0.44      | 0.43     |             |

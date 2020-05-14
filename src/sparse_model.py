@@ -222,26 +222,26 @@ if __name__ == '__main__':
     oob_diff = []
     oob = []
 
-    for i in list(range(2,20)):
+    # for i in list(range(2,20)):
 
-        rf = RandomForestRegressor(max_depth=i, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
-        rf.fit(X_train, y_train)
+    #     rf = RandomForestRegressor(max_depth=i, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
+    #     rf.fit(X_train, y_train)
 
-        print(f"R2 Train = {rf.score(X_train, y_train)}")
-        print(f"R2 Test = {rf.score(X_test, y_test)}")
-        print(f"R2 Holdout = {rf.score(X_holdout, y_holdout)}")
-        print(f"OOB score = {rf.oob_score_}")
-        oob_diff.append(rf.score(X_train, y_train) - rf.oob_score_)
-        oob.append(rf.oob_score_)
+    #     print(f"R2 Train = {rf.score(X_train, y_train)}")
+    #     print(f"R2 Test = {rf.score(X_test, y_test)}")
+    #     print(f"R2 Holdout = {rf.score(X_holdout, y_holdout)}")
+    #     print(f"OOB score = {rf.oob_score_}")
+    #     oob_diff.append(rf.score(X_train, y_train) - rf.oob_score_)
+    #     oob.append(rf.oob_score_)
 
-    ax.plot(oob_diff, color='red')
-    ax.plot(oob, color='blue')
-    ax.set_title("Reducing OOB Error by limiting max_depth")
-    plt.savefig('images/oob.png')
+    # ax.plot(oob_diff, color='red')
+    # ax.plot(oob, color='blue')
+    # ax.set_title("Reducing OOB Error by limiting max_depth")
+    # plt.savefig('images/oob.png')
     
 
     # Check feature importances
     # feat_imp_plots()
 
     # Check partial dependences
-    # pdplots()
+    pdplots()
