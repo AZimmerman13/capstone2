@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
     rf = RandomForestRegressor(max_depth=None, max_features='auto', n_estimators=30)
 
-    feature_names = full_df.df.columns
+    feature_names = full_df.X.columns
     rf.fit(X_train, y_train)
 
     feat_imp = pd.DataFrame({'feature_name':feature_names, 'feat_imp': rf.feature_importances_})
