@@ -8,9 +8,16 @@ If you ask yourself this question and the answer is either "a renewable world" *
 ## Data
 This publicly available dataset came in two seperate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in mid 2019.  Some previous work had been done to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.  As such, the following analysis does not consider the effects of the time-series on price.
 
+
+The combined dataset contained 178,000 rows of hourly data between January 2015 and Deember 2018.
+
+
+what is actually in this data, how many rows, what am i using as my target, hourly 2015-18
+
 The weather dataset contained hourly data for the 5 largest cities in Spain: Madrid, Barcelona, Valencia, Sevilla, Bilbao.
 
-![image of those 5 cities in spain](images/map-of-spain.jpg)
+<p align="center">
+       <img src="images/map-of-spain.jpg" width="400" height="400" />
 
 credit: https://www.alicante-spain.com/images/map-of-spain.jpg
 
@@ -110,11 +117,27 @@ These results indicate that the relationships at play between the features and t
 ## Interpretation
 I hoped to gain insight into the effect of my features on energy price by plotting the feature importances for my RandomForestRegressor.  The results of this are shown below, with gas and coal generation leading the list, followed by total load (demand), hydropower, and a features called 'generation other renewable' on which the data documentation sheds unfortunately little light.
 
+
+
 ![](images/feature_imp_sparse.png)
+<img src="images/feature_imp_sparse.png" width="200" height="200" />
 
-total load is in kW, everything else is MW
 
-![](images/pd1.png)
-![](images/pd3.png)
-![](images/pd2.png)
-![](images/pd4.png)
+
+I hoped that partial dependence plots might shed some additional light on how some of these features affect energy prices.
+
+Here we see 
+<p align="center">
+<img src="images/pd1.png" width="500" height="300" />
+
+<p align="center">
+<img src="images/pd3.png" width="500" height="300" />
+
+<p align="center">
+<img src="images/pd2.png" width="500" height="300" />
+
+<p align="center">
+<img src="images/pd4.png" width="500" height="400" />
+
+
+## NExt steps
