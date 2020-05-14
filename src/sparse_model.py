@@ -217,7 +217,7 @@ if __name__ == '__main__':
     # grid.best_params_
     # Out[4]: {'max_depth': None, 'max_features': 'auto', 'n_estimators': 30}
 
-    rf = RandomForestRegressor(max_depth=3, max_features='auto', n_estimators=30, oob_score=True)
+    rf = RandomForestRegressor(max_depth=10, max_features='auto', n_estimators=30, oob_score=True)
 
     
     rf.fit(X_train, y_train)
