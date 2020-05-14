@@ -234,8 +234,8 @@ if __name__ == '__main__':
         oob_diff.append(rf.score(X_train, y_train) - rf.oob_score_)
         oob.append(rf.oob_score_)
 
-    ax.plot(oob_diff, list(range(2,20)), color='red')
-    ax.plot(oob, list(range(2,20)), color='blue')
+    ax.plot(oob_diff, color='red')
+    ax.plot(oob, color='blue')
     ax.set_title("Reducing OOB Error by limiting max_depth")
     plt.savefig('images/oob.png')
     
