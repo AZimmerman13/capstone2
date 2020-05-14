@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Lasso, LassoCV, Ridge, LinearRegression
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline as SKPipe
+from sklearn.inspection import permutation_importance
 from sklearn.model_selection import GridSearchCV
 from src.pipeline import Pipeline
 from src.main_script import plot_corr_matrix, scree_plot, plot_num_estimators_mse
@@ -152,7 +153,20 @@ if __name__ == '__main__':
     fig, ax = plt.subplots(1, figsize=(8,10))
     ax.barh(feat_imp['feature_name'], feat_imp['feat_imp'])
     ax.invert_yaxis()
+    ax.set_title('Random Forest Feature Importance')
+    plt.tight_layout()
     plt.savefig('images/feature_imp_sparse.png')
+    plt.close()
+
+
+    feat_imp = pd.DataFrame({'feature_name':feature_names, 'perm_imp': rf.feature_importances_})
+    feat_imp.sort_values('perm_imp',ascending=False,inplace=True)
+    fig, ax = plt.subplots(1, figsize=(8,10))
+    ax.barh(feat_imp['feature_name'], feat_imp['perm_imp'])
+    ax.invert_yaxis()
+    ax.set_title('Random Forest Permutation Importance')
+    plt.tight_layout()
+    plt.savefig('images/perm_imp_sparse.png')
     plt.close()
 
 
