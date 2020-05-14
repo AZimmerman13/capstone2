@@ -166,8 +166,9 @@ if __name__ == '__main__':
              'generation solar', 'generation wind onshore', 'generation nuclear', 
              'generation hydro run-of-river and poundage'], n_jobs=-1)
     fig = plt.gcf()
-    fig.suptitle("Partial Dependence of energy price")
+    fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
     plt.tight_layout()
+    fig.subplots_adjust(hspace=0.3)
     plt.savefig('images/partial_dependence_sparse.png')
     plt.close()
 
