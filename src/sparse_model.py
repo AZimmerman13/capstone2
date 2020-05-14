@@ -232,6 +232,7 @@ if __name__ == '__main__':
         print(f"R2 Holdout = {rf.score(X_holdout, y_holdout)}")
         print(f"OOB score = {rf.oob_score_}")
         oob_diff.append(rf.score(X_train, y_train) - rf.oob_score_)
+        oob.apend(rf.oob_score_)
 
     ax.plot(oob_diff, list(range(2,20)), color='red')
     ax.plot(oob, list(range(2,20)), color='blue')
