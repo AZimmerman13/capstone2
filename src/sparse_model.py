@@ -166,27 +166,27 @@ if __name__ == '__main__':
              'generation solar']
 
     third_pdp = ['generation wind onshore', 'generation nuclear', 
-             'generation hydro run-of-river and poundage']
+             'Madrid_wind_speed']
   
 
     plot_partial_dependence(rf, X_train, first_pdp, n_jobs=-1)
     fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
-    plt.tight_layout()
     fig.subplots_adjust(hspace=2.0, wspace=2.0)
+    plt.tight_layout()
     plt.savefig('images/pd1.png')
     plt.close()
 
     plot_partial_dependence(rf, X_train, second_pdp, n_jobs=-1)
     fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
-    plt.tight_layout()
     fig.subplots_adjust(hspace=2.0, wspace=2.0)
+    plt.tight_layout()
     plt.savefig('images/pd2.png')
     plt.close()
 
     plot_partial_dependence(rf, X_train, third_pdp, n_jobs=-1)
     fig.suptitle("Partial Dependence of Energy Price on Various Generation Types")
-    plt.tight_layout()
     fig.subplots_adjust(hspace=2.0, wspace=2.0)
+    plt.tight_layout()
     plt.savefig('images/pd3.png')
     plt.close()
 
