@@ -1,4 +1,4 @@
-# capstone2
+# Capstone 2: Energy Price Prediction
 by Austin Zimmerman
 
 
