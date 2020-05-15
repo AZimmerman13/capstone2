@@ -1,6 +1,7 @@
 # Capstone 2: Energy Price Prediction
 by Austin Zimmerman
-
+<p align="center">
+       <img src="images/energy_price.png" width="700" height="400" />
 
 ## Motivation
 
@@ -20,11 +21,13 @@ The weather dataset contained temperature, humidity, pressure, wind speed and mo
 <p align="center">
        <img src="images/map-of-spain.jpg" width="400" height="400" />
 
-credit: https://www.alicante-spain.com/images/map-of-spain.jpg
 
 This dataset was relatively clean save for the ' ' in front of 'Barcelona' in every row, as well as what appeared to be a broken pressure gauge for about a month in Barcelona.
 
 The energy dataset concerned generation in MW for various energy sources throughout the country.  This dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 
+
+<p align="center">
+       <img src="images/mw.png" width="500" height="240" />
 
 
 ## Pipeline and Workflow
@@ -145,3 +148,12 @@ A this point we have a model that performs quite well at predicting energy price
 
 #### Optimize price to reduce GHG emissions
 Once we can predict energy prices given data about which energy sources are generating power, I believe the most utility can be found in reverse engineering the process to find prices that produce the fewest GHG emissions.  This information would be incrediblt useful to governing and regulatory bodies, as well as public utiities.
+
+### Image credits:
+https://energywatch-inc.com/electricity-pricing-influencers/
+
+https://www.alicante-spain.com/images/map-of-spain.jpg
+
+https://www.nwcouncil.org/news/megawatt-powerful-question
+
+https://www.groupwaretech.com/Deploying-a-Golden-AMI-Pipeline-in-AWS-with-Ansible
