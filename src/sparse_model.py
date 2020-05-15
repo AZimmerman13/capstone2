@@ -99,7 +99,7 @@ def feat_imp_plots():
     feature_names = full_df.X.columns
     feat_imp = pd.DataFrame({'feature_name':feature_names, 'feat_imp': rf.feature_importances_})
     feat_imp.sort_values('feat_imp',ascending=False,inplace=True)
-    fig, ax = plt.subplots(1, figsize=(4,5))
+    fig, ax = plt.subplots(1, figsize=(8,10))
     ax.barh(feat_imp['feature_name'].head(9), feat_imp['feat_imp'].head(9))
     ax.invert_yaxis()
     ax.set_title('Random Forest Feature Importance')
