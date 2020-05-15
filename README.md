@@ -73,20 +73,21 @@ Energy
 
 The energy dataset provides a much more visually interesting (and analytically helpful) matrix.  Lignite, gas, coal, and oil generation , along with total load, all appear positively correlated with price.  Meanwhile, onshore wind and pumped storage consumption appear to be negatively correllated with price.
 
-![](images/clean_energy_corr.png)
+![](images/clean_energy_corr_sparse.png)
 
 
 
 ### Model Selection
 
 #### Random Forest
-From the outset, I was planning on using a random forest regressor on this data. 
+From the outset, I was planning on using a random forest regressor on this data.  After first running the regressor with default parameters, I quickly found that I could save big on computation with very little increase in error.  The elbow of this MSE plot is around 10 estimators, and the value is nearly the same as MSE at 100 estimators (the default).
+
 ![num estimators plot](images/rf_num_estimator_plot.png)
 
-It appears that a case can be made that the best num_estimators here is just between 10 and 50.  A GridSearchCV reported 30 as the optimum values.  Running my RandomForest with 30 estimators produced surprisingly high r^2 scores for my train and test data, **0.97** and **0.82** respectively.  These were surprisingly good results, and I came away from them concerned that I had introduced some leakage that was causing my model to overfit.
+A GridSearchCV reported 30 as the optimum number of estimators.  Running my RandomForest with 30 estimators produced surprisingly high r^2 scores for both my train and test data, **0.97** and **0.82** respectively.  These were good results, but I came away from them concerned that I had introduced some leakage that was causing my model to overfit.
 
 #### SKlearn Pipeline
-I used SKlearn's pipeline class to compare my random forest with 3 other models.  The similarity bewteen results from the sklearn pipeline and my own reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline.  
+To address these concerns, I used SKlearn's pipeline class to compare my random forest with 3 other models.  The similarity between results from the sklearn pipeline and my own reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline.  
 
 
 
@@ -102,7 +103,8 @@ These results indicate that the relationships at play between the features and t
 
 
 ## Interpretation
-I hoped to gain insight into the effect of my features on energy price by plotting the feature importances for my RandomForestRegressor.  The results of this are shown below, with gas and coal generation leading the list, followed by total load (demand), hydropower, and a features called 'generation other renewable' on which the data documentation sheds unfortunately little light.
+#### Feature Importance
+I hoped to gain insight into the effect of my features on energy price by plotting the feature importances for my RandomForestRegressor.  The results of this are shown below, with gas and coal generation leading the list, followed by total load (demand), hydropower, and a feature called 'generation other renewable' on which the data documentation sheds unfortunately little light.
 
 
 
@@ -110,21 +112,33 @@ I hoped to gain insight into the effect of my features on energy price by plotti
 <img src="images/feature_imp_sparse.png" width="200" height="200" />
 
 
+#### Partial Dependence
+While the feature importance shows the magnitude of a feature's effect on price, it does not tell us anything about directionality.  Partial dependence plots help to shed some light on how some of these features impact energy prices.
 
-I hoped that partial dependence plots might shed some additional light on how some of these features affect energy prices.
-
-Here we see 
+Here we see the top three most important features, each clearly with a positive effect on price.
 <p align="center">
 <img src="images/pd1.png" width="500" height="300" />
+
+
+By far the most significant weather metric in the dataset, wind speed in madrid has a strong negative correlation with energy price.
 
 <p align="center">
 <img src="images/pd3.png" width="500" height="300" />
 
+
+Interesting step behavior with solar generation and some very strange behavior in the 'other' category.
 <p align="center">
 <img src="images/pd2.png" width="500" height="300" />
 
+
+Perhaps the most insightful plot, hydro pumped storage just misses the top ten feature importances, but since pumped storage is often used in concert with renewables, it may be a good sign for the future of renewables.
 <p align="center">
 <img src="images/pd4.png" width="500" height="400" />
 
 
-## NExt steps
+## Next steps
+#### Apply this model to U.S. Data
+A this point we have a model that performs quite well at predicting energy prices given generation statistics and a few key weather metrics.  With a chance to expand on this process I would hope to apply this model to a united states dataset.  
+
+#### Optimize price to reduce GHG emissions
+Once we can predict energy prices given data about which energy sources are generating power, I believe the most utility can be found in reverse engineering the process to find prices that produce the fewest GHG emissions.  This information would be incrediblt useful to governing and regulatory bodies, as well as public utiities

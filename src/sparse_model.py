@@ -99,7 +99,7 @@ def feat_imp_plots():
     feature_names = full_df.X.columns
     feat_imp = pd.DataFrame({'feature_name':feature_names, 'feat_imp': rf.feature_importances_})
     feat_imp.sort_values('feat_imp',ascending=False,inplace=True)
-    fig, ax = plt.subplots(1, figsize=(8,10))
+    fig, ax = plt.subplots(1, figsize=(4,5))
     ax.barh(feat_imp['feature_name'].head(9), feat_imp['feat_imp'].head(9))
     ax.invert_yaxis()
     ax.set_title('Random Forest Feature Importance')
@@ -183,8 +183,7 @@ if __name__ == '__main__':
     # clean residual col names that came from the merge and low feature importance features
     for i in ["Valencia_city_name", " Barcelona_city_name", "Bilbao_city_name", 
             "Seville_city_name", "Madrid_city_name", 'Seville_wind_speed',
-             " Barcelona_wind_speed", 'Valencia_wind_speed', "Valencia_temp",
-            "Bilbao_wind_speed"]:
+             " Barcelona_wind_speed", "Valencia_temp"]:
         all_cities_df.df.drop(i, axis=1, inplace=True)
 
     # Merge energy and weather
@@ -241,10 +240,8 @@ if __name__ == '__main__':
     rf = RandomForestRegressor(max_depth=None, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
     rf.fit(X_train, y_train)
 
-
     # plot_oob_error()
     
-
     # Check feature importances
     feat_imp_plots()
 
