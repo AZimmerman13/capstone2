@@ -9,12 +9,10 @@ If you ask yourself this question and the answer is either "a renewable world" *
 This publicly available dataset came in two seperate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in mid 2019.  Some previous work had been done to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.  As such, the following analysis does not consider the effects of the time-series on price.
 
 
-The combined dataset contained 178,000 rows of hourly data between January 2015 and Deember 2018.
+The combined dataset contained 178,000 rows of hourly data between January 2015 and Deember 2018. The target of my predictions was real-time energy price in EUR/MWh provided by the energy csv.
 
 
-what is actually in this data, how many rows, what am i using as my target, hourly 2015-18
-
-The weather dataset contained hourly data for the 5 largest cities in Spain: Madrid, Barcelona, Valencia, Sevilla, Bilbao.
+The weather dataset contained temperature, humidity, pressure, wind speed and more data for the 5 largest cities in Spain: Madrid, Barcelona, Valencia, Sevilla, Bilbao.
 
 <p align="center">
        <img src="images/map-of-spain.jpg" width="400" height="400" />
@@ -23,9 +21,7 @@ credit: https://www.alicante-spain.com/images/map-of-spain.jpg
 
 This dataset was relatively clean save for the ' ' in front of 'Barcelona' in every row, as well as what appeared to be a broken pressure gauge for about a month in Barcelona.
 
-The energy dataset contained similarly timestamped data, mostly concerning generation in MW for various energy sources throughout the country.  This dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 
-
-Both datasets covered a three-year period from January 2015 to December 2018.
+The energy dataset concerned generation in MW for various energy sources throughout the country.  This dataset was incomplete in a few areas, namely that the 'generation fossil coal-derived gas', 'generation fossil oil shale', 'generation fossil peat', 'generation geothermal', and 'generation marine' contained only zeros, and 'generation hydro pumped storage aggregated' contained all null values. 
 
 
 ## Pipeline and Workflow
@@ -67,7 +63,7 @@ I had a suspicion that weather_description and weather_id were redundant as they
 weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.  I opted to one-hot encode weather_main and discard the other two to minimize dimensionality.
 
 
-### Correlation Matrices
+#### Correlation Matrices
 
 To avoid making a single, massive, unreadable correlation matrix with all of my features, I decided to add price to the weather DataFrame and make a separate, moderately-readable one for each subset.  When it comes to weather, it appears that wind speed and temperature are the only features which are routinely correlated with energy price (bottom row).
 
@@ -80,28 +76,18 @@ The energy dataset provides a much more visually interesting (and analytically h
 ![](images/clean_energy_corr.png)
 
 
-### VIF
-perhaps unsurprisingly, temp, max_temp, and min_temp were highly correlated.  The final straw in removing these columns was seeing them with variance inflation factors over 500.
-
-maybe dump this section
-
-### PCA: 
-first 8 priciple componants make up 40% of the variance, not great.  There is definitely some signal, but it might take more featurization than I originally planned to get a model working well.
-
-
 
 ### Model Selection
 
 #### Random Forest
-From the outset, I was planning on using a random forest regressor on this data.  
+From the outset, I was planning on using a random forest regressor on this data. 
 ![num estimators plot](images/rf_num_estimator_plot.png)
 
-It appears that a case can be made that the best num_estimators here is just between 10 and 50.  A GridSearchCV reported 30 as the optimum values.  Running my RandomForest with 30 estimators produced surprisingly high r^2 scores for my train and test data, 0.97 and 0.82 respectively.  These were surprisingly good results, and I came away from them concerned that I had introduced some leakage that was causing my model to overfit.
+It appears that a case can be made that the best num_estimators here is just between 10 and 50.  A GridSearchCV reported 30 as the optimum values.  Running my RandomForest with 30 estimators produced surprisingly high r^2 scores for my train and test data, **0.97** and **0.82** respectively.  These were surprisingly good results, and I came away from them concerned that I had introduced some leakage that was causing my model to overfit.
 
 #### SKlearn Pipeline
-I used SKlearn's pipeline class to compare my random forest with 3 other models.  The similar results from the random forest via the sklearn pipeline reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline.  
+I used SKlearn's pipeline class to compare my random forest with 3 other models.  The similarity bewteen results from the sklearn pipeline and my own reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline.  
 
-In addition
 
 
 | Model                 | Train R^2 | Test R^2 | OOB Score   |
@@ -110,6 +96,7 @@ In addition
 | Lasso(alpha=0.03)     | 0.44      | 0.43     |             |
 | Ridge(alpha=0.03)     | 0.44      | 0.43     |             |
 | LinearRegression      | 0.44      | 0.43     |             |
+
 
 These results indicate that the relationships at play between the features and the target are not linear, and that in order to get highly interpretable results from a Linear Model, significant feature engineering would be required.
 

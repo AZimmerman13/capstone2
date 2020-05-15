@@ -107,7 +107,26 @@ def feat_imp_plots():
     plt.savefig('images/feature_imp_sparse.png')
     plt.close()
 
-    
+def plot_oob_error():
+    fig, ax = plt.subplots()
+    oob_diff = []
+    oob = []
+    for i in list(range(2,20)):
+        rf = RandomForestRegressor(max_depth=i, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
+
+        rf.fit(X_train, y_train)
+
+        print(f"R2 Train = {rf.score(X_train, y_train)}")
+        print(f"R2 Test = {rf.score(X_test, y_test)}")
+        print(f"R2 Holdout = {rf.score(X_holdout, y_holdout)}")
+        print(f"OOB score = {rf.oob_score_}")
+        oob_diff.append(rf.score(X_train, y_train) - rf.oob_score_)
+        oob.append(rf.oob_score_)
+
+    ax.plot(oob_diff, color='red')
+    ax.plot(oob, color='blue')
+    ax.set_title("Reducing OOB Error by limiting max_depth")
+    plt.savefig('images/oob.png')
 
 if __name__ == '__main__':
     print("Loading Data")
@@ -125,8 +144,8 @@ if __name__ == '__main__':
     # Drop columns
     weather_drop_cols = ['weather_icon', 'weather_description', 'weather_id', 'temp_min', 
                     'temp_max', 'pressure', 'humidity',
-                    'rain_1h', 'rain_3h', 'snow_3h', 'clouds_all', 'dust', 'fog', 'haze',
-                     'mist', 'rain', 'smoke', 'snow', 'squall', 'thunderstorm', 'clouds', 'drizzle', 'wind_deg']
+                    'rain_1h', 'rain_3h', 'snow_3h', 'clouds_all', 'dust']
+                   #  'fog', 'haze','mist', 'rain', 'smoke', 'snow', 'squall', 'thunderstorm', 'clouds', 'drizzle', 'wind_deg']
     
     energy_drop_cols = ['generation fossil coal-derived gas','generation fossil oil shale', 
                         'generation fossil peat', 'generation geothermal',
@@ -167,18 +186,15 @@ if __name__ == '__main__':
              " Barcelona_wind_speed", 'Valencia_wind_speed']:
         all_cities_df.df.drop(i, axis=1, inplace=True)
 
-    
     # Merge energy and weather
     print('\nMerging dataset')
   
-
     # Merge energy with the featurized cities DF to make the complete DataFrame
     full_df = energy.merge_dfs(all_cities_df.df)
 
     plot_corr_matrix(full_df.df)
     plt.savefig('images/full_corr_sparse.png')
     plt.close()
-
 
     print('\nCreating train, test, and holdout sets')
     full_df.getXy('price actual')
@@ -218,32 +234,18 @@ if __name__ == '__main__':
 
     # grid.best_params_
     # Out[4]: {'max_depth': None, 'max_features': 'auto', 'n_estimators': 30}
-    fig, ax = plt.subplots()
-    oob_diff = []
-    oob = []
+    
+
+    #Best Model
     rf = RandomForestRegressor(max_depth=None, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
     rf.fit(X_train, y_train)
-    # for i in list(range(2,20)):
-        # rf = RandomForestRegressor(max_depth=i, max_features='auto', n_estimators=30, oob_score=True, n_jobs=-1)
-
-    #     rf.fit(X_train, y_train)
 
 
-    #     print(f"R2 Train = {rf.score(X_train, y_train)}")
-    #     print(f"R2 Test = {rf.score(X_test, y_test)}")
-    #     print(f"R2 Holdout = {rf.score(X_holdout, y_holdout)}")
-    #     print(f"OOB score = {rf.oob_score_}")
-    #     oob_diff.append(rf.score(X_train, y_train) - rf.oob_score_)
-    #     oob.append(rf.oob_score_)
-
-    # ax.plot(oob_diff, color='red')
-    # ax.plot(oob, color='blue')
-    # ax.set_title("Reducing OOB Error by limiting max_depth")
-    # plt.savefig('images/oob.png')
+    plot_oob_error()
     
 
     # Check feature importances
-    # feat_imp_plots()
+    feat_imp_plots()
 
     # Check partial dependences
-    pdplots()
+    # pdplots()
