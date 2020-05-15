@@ -110,9 +110,7 @@ These results indicate that the relationships at play between the features and t
 I hoped to gain insight into the effect of my features on energy price by plotting the feature importances for my RandomForestRegressor.  The results of this are shown below, with gas and coal generation leading the list, followed by total load (demand), hydropower, and a feature called 'generation other renewable' on which the data documentation sheds unfortunately little light.
 
 
-
-<p align="center">
-<img src="images/feature_imp_sparse.png" width="700" height="700" />
+![](images/feature_imp_sparse.png)
 
 
 #### Partial Dependence
