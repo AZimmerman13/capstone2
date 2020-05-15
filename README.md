@@ -9,7 +9,7 @@ For many years, solar panels and wind turbines have been hailed as the harbinger
 With a fair bit of inspiration from a [recent paper on *Tackling Climate Change with Machine Learning*](https://arxiv.org/abs/1906.05433), I have made an effort to better understand the forces that act upon energy prices. In this analysis I endeavor to build a model that can predict energy prices based on generation and weather data and, hopefully, provide some insight as to how renewables affect those prices.
 
 ## Data
-This publicly available dataset came in two seperate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in mid 2019.  Some previous work has been done wit this data to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.  As such, the following analysis does not consider the effects of the time-series on price.
+This publicly available dataset came in two seperate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in late 2019.  Some previous work has been done wit this data to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.  As such, the following analysis does not consider the effects of the time-series on price.
 
 
 The combined dataset contained 178,000 rows of hourly data between January 2015 and Deember 2018. The target of my predictions was real-time energy price in EUR/MWh provided by the energy csv.
@@ -32,9 +32,9 @@ The energy dataset concerned generation in MW for various energy sources through
 <p align="center">
 <img src="images/aws.png" width="400" height="180" />
 
-I gave myself the challenge of working with the AWS suite on this project, taking the opportunity to gain familiarity with these widely used tools.  I stored my data and wrote results remotely into an S3 bucket, and did all model training and manipulation on the full dataset in and ubuntu t2.small EC2 instance with anaconda3 and git.  I wrote code mostly on my local machine, making small adjustments in vim on the EC2 instance when necessary.  I followed a basic git workflow, essentially treating my local and virtual machines as if they were partners working on the same project.
+I gave myself the challenge of working with the AWS suite on this project, taking the opportunity to gain familiarity with these widely used tools.  I stored my data and wrote results remotely into an S3 bucket, and did all model training and manipulation on the full dataset in an ubuntu t2.small EC2 instance with anaconda3 and git.  I wrote code mostly on my local machine, making small adjustments in vim on the EC2 instance when necessary.  I followed a basic git workflow, essentially treating my local and virtual machines as if they were partners working on the same project.
 
-I created a Pipeline class to load data in from S3 (using the s3fs library) and apply the necessary cleaning and transformations.  I also worked a bit with SKlearn's built-in Pipeline class.  The biggest speed-bump at this stage was turning the 'city_name' feature into a series of features that represented weather data for each city.  While this solved the probem of having duplicate indices (one for each city at each timestamp), it sent my dimensionality skyward very quickly.
+I created a Pipeline class to load data in from S3 (using the s3fs library) and apply the necessary cleaning and transformations.  I also worked a bit with SKlearn's built-in Pipeline class.  The biggest speed-bump at this stage was turning the 'city_name' feature into a series of features that represented weather data for each city.  While this solved the problem of having duplicate indices (one for each city at each timestamp), it sent my dimensionality skyward very quickly.
 
 
 ## EDA
@@ -77,7 +77,7 @@ To avoid making a single, massive, unreadable correlation matrix with all of my 
 
 Energy
 
-The energy dataset provides a much more visually interesting (and analytically helpful) matrix.  Lignite, gas, coal, and oil generation , along with total load, all appear positively correlated with price.  Meanwhile, onshore wind and pumped storage consumption appear to be negatively correllated with price.
+The energy dataset provides a much more visually interesting (and analytically helpful) matrix.  Lignite, gas, coal, and oil generation , along with total load, all appear positively correlated with price.  Meanwhile, onshore wind and pumped storage consumption appear to be negatively correlated with price.
 
 ![](images/clean_energy_corr_sparse.png)
 
@@ -93,7 +93,7 @@ From the outset, I was planning on using a random forest regressor on this data.
 A GridSearchCV reported 30 as the optimum number of estimators.  Running my RandomForest with 30 estimators produced surprisingly high r^2 scores for both my train and test data, **0.97** and **0.82** respectively.  These were good results, but I came away from them concerned that I had introduced some leakage that was causing my model to overfit.
 
 #### SKlearn Pipeline
-To address these concerns, I used SKlearn's pipeline class to compare my random forest with 3 other models.  The similarity between results from the sklearn pipeline and my own reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline.  
+To address these concerns, I used SKlearn's pipeline class to compare my random forest with 2 other models.  The similarity between results from the sklearn pipeline and my own reassured me that I had not caused any leakage with my treatment of the standardization and train-test-split in my custom pipeline.  
 
 
 
@@ -123,7 +123,7 @@ Here we see the top three most important features, each clearly with a positive 
 <img src="images/pd1.png" width="500" height="300" />
 
 
-By far the most significant weather metric in the dataset, wind speed in madrid has a strong negative correlation with energy price.
+One of the most significant weather metrics in the dataset, wind speed in madrid has a strong negative correlation with energy price.
 
 <p align="center">
 <img src="images/pd3.png" width="500" height="300" />
@@ -134,7 +134,7 @@ Interesting step behavior with solar generation and some very strange behavior i
 <img src="images/pd2.png" width="500" height="300" />
 
 
-Perhaps the most insightful plot, hydro pumped storage just misses the top ten feature importances, but since pumped storage is often used in concert with renewables, it may be a good sign for the future of renewables.
+An interesting, hydro pumped storage just misses the top ten feature importances, but since it is often used in concert with renewables, it may have interesting implications for renewables.
 <p align="center">
 <img src="images/pd4.png" width="500" height="400" />
 
