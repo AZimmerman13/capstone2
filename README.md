@@ -111,8 +111,8 @@ I hoped to gain insight into the effect of my features on energy price by plotti
 
 
 
-
-<img src="images/feature_imp_sparse.png" width="600" height="700" />
+<p align="center">
+<img src="images/feature_imp_sparse.png" width="700" height="700" />
 
 
 #### Partial Dependence
