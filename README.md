@@ -1,4 +1,7 @@
 # capstone2
+by Austin Zimmerman
+
+
 ## Motivation
 
 For many years, solar panels and wind turbines have been hailed as the harbinger of a renewable energy revolution that has only just very recently begun to take shape on a global scale.  The chief complaint from those hesitant to adopt or incorporate renewable energy sources was almost always their effect on energy prices.  At the time of writing, the world is engulfed in a novel Coronavirus pandemic that has shut down industry and social interaction around the globe.  As viral videos of crystal clear streams and suburban big cats make theur way around the world, many are starting to think more seriously about our impact on the planet
