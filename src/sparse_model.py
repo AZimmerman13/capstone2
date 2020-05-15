@@ -100,7 +100,7 @@ def feat_imp_plots():
     feat_imp = pd.DataFrame({'feature_name':feature_names, 'feat_imp': rf.feature_importances_})
     feat_imp.sort_values('feat_imp',ascending=False,inplace=True)
     fig, ax = plt.subplots(1, figsize=(8,10))
-    ax.barh(feat_imp['feature_name'], feat_imp['feat_imp'])
+    ax.barh(feat_imp['feature_name'].head(9), feat_imp['feat_imp'].head(9))
     ax.invert_yaxis()
     ax.set_title('Random Forest Feature Importance')
     plt.tight_layout()
@@ -143,9 +143,9 @@ if __name__ == '__main__':
 
     # Drop columns
     weather_drop_cols = ['weather_icon', 'weather_description', 'weather_id', 'temp_min', 
-                    'temp_max', 'pressure', 'humidity',
-                    'rain_1h', 'rain_3h', 'snow_3h', 'clouds_all', 'dust']
-                   #  'fog', 'haze','mist', 'rain', 'smoke', 'snow', 'squall', 'thunderstorm', 'clouds', 'drizzle', 'wind_deg']
+                    'temp_max', 'pressure', 'humidity','rain_1h', 'rain_3h', 'snow_3h',
+                     'clouds_all', 'dust', 'fog', 'haze','mist', 'rain', 'smoke', 
+                     'snow', 'squall', 'thunderstorm', 'clouds', 'drizzle', 'wind_deg']
     
     energy_drop_cols = ['generation fossil coal-derived gas','generation fossil oil shale', 
                         'generation fossil peat', 'generation geothermal',
@@ -183,7 +183,8 @@ if __name__ == '__main__':
     # clean residual col names that came from the merge and low feature importance features
     for i in ["Valencia_city_name", " Barcelona_city_name", "Bilbao_city_name", 
             "Seville_city_name", "Madrid_city_name", 'Seville_wind_speed',
-             " Barcelona_wind_speed", 'Valencia_wind_speed']:
+             " Barcelona_wind_speed", 'Valencia_wind_speed', "Valencia_temp",
+            "Bilbao_wind_speed"]:
         all_cities_df.df.drop(i, axis=1, inplace=True)
 
     # Merge energy and weather
@@ -241,7 +242,7 @@ if __name__ == '__main__':
     rf.fit(X_train, y_train)
 
 
-    plot_oob_error()
+    # plot_oob_error()
     
 
     # Check feature importances
