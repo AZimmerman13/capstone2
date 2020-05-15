@@ -1,12 +1,12 @@
 # capstone2
 ## Motivation
 
-Energy production is the cause of massive quantities of greenhouse gasses flowing into our atmosphere.  For many years, solar panels and wind turbines have been hailed as the harbinger of a renewable energy revolution that has only just very recently begun to take shape on a global scale.  The chief complaint from those hesitant to adopt or incorporate renewable energy sources was almost always their effect on energy prices.  At the time of writing, the world is engulfed in a novel Coronavirus pandemic that has shut down industry and social interaction accross the board.  This pandemic, and the countless videos of wildlife returning to abandoned street and uncluttered harbors, has sparked many conversations about what type of world we want to return to once it is safe to do so.
+For many years, solar panels and wind turbines have been hailed as the harbinger of a renewable energy revolution that has only just very recently begun to take shape on a global scale.  The chief complaint from those hesitant to adopt or incorporate renewable energy sources was almost always their effect on energy prices.  At the time of writing, the world is engulfed in a novel Coronavirus pandemic that has shut down industry and social interaction around the globe.  As viral videos of crystal clear streams and suburban big cats make theur way around the world, many are starting to think more seriously about our impact on the planet
 
-If you ask yourself this question and the answer is either "a renewable world" **or** you just think data science is really cool, continue reading.  One of the best tools an advocate for the incorporation of renewables can have is an understanding of how they affect energy prices.  In this project I endeavor to build a model that can predict energy prices based on generation and weather data and, hopefully, provide some insight as to how renewables affect those prices.
+With a fair bit of inspiration from a [recent paper on *Tackling Climate Change with Machine Learning*](https://arxiv.org/abs/1906.05433), I have made an effort to better understand the forces that act upon energy prices. In this analysis I endeavor to build a model that can predict energy prices based on generation and weather data and, hopefully, provide some insight as to how renewables affect those prices.
 
 ## Data
-This publicly available dataset came in two seperate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in mid 2019.  Some previous work had been done to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.  As such, the following analysis does not consider the effects of the time-series on price.
+This publicly available dataset came in two seperate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in mid 2019.  Some previous work has been done wit this data to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.  As such, the following analysis does not consider the effects of the time-series on price.
 
 
 The combined dataset contained 178,000 rows of hourly data between January 2015 and Deember 2018. The target of my predictions was real-time energy price in EUR/MWh provided by the energy csv.
@@ -25,6 +25,9 @@ The energy dataset concerned generation in MW for various energy sources through
 
 
 ## Pipeline and Workflow
+
+<p align="center">
+<img src="images/aws.png" width="400" height="180" />
 
 I gave myself the challenge of working with the AWS suite on this project, taking the opportunity to gain familiarity with these widely used tools.  I stored my data and wrote results remotely into an S3 bucket, and did all model training and manipulation on the full dataset in and ubuntu t2.small EC2 instance with anaconda3 and git.  I wrote code mostly on my local machine, making small adjustments in vim on the EC2 instance when necessary.  I followed a basic git workflow, essentially treating my local and virtual machines as if they were partners working on the same project.
 
@@ -108,8 +111,8 @@ I hoped to gain insight into the effect of my features on energy price by plotti
 
 
 
-![](images/feature_imp_sparse.png)
-<img src="images/feature_imp_sparse.png" width="200" height="200" />
+
+<img src="images/feature_imp_sparse.png" width="600" height="700" />
 
 
 #### Partial Dependence
