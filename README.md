@@ -83,7 +83,7 @@ The energy dataset provides a much more visually interesting (and analytically h
 ### Model Selection
 
 #### Random Forest
-From the outset, I was planning on using a random forest regressor on this data.  After first running the regressor with default parameters, I quickly found that I could save on computation with very little increase in error.  The elbow of this MSE plot is around 10 estimators, and the MSE value is nearly the same as MSE at 100 estimators (the default).
+From the outset, I was planning on using a random forest regressor on this data.  After first running the regressor with default parameters, I quickly found that I could save on computation with very little increase in error.  The elbow of this MSE plot is around 10 estimators, and the MSE ++value is nearly the same as MSE at 100 estimators (the default).
 
 ![num estimators plot](images/rf_num_estimator_plot.png)
 
@@ -98,7 +98,6 @@ To address these concerns, I used SKlearn's pipeline class to compare my random 
 |-----------------------|-----------|----------|-------------|
 | RandomForestRegressor | 0.97      | 0.83     | 0.81        |
 | Lasso(alpha=0.03)     | 0.44      | 0.43     |             |
-| Ridge(alpha=0.03)     | 0.44      | 0.43     |             |
 | LinearRegression      | 0.44      | 0.43     |             |
 
 
