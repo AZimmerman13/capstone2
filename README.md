@@ -5,15 +5,15 @@ by Austin Zimmerman
 
 ## Motivation
 
-For many years, solar panels and wind turbines have been hailed as the harbinger of a renewable energy revolution that has only just very recently begun to take shape on a global scale.  The chief complaint from those hesitant to adopt or incorporate renewable energy sources was almost always their effect on energy prices.  At the time of writing, the world is engulfed in a novel Coronavirus pandemic that has shut down industry and social interaction around the globe.  As viral videos of crystal clear streams and suburban big cats make theur way around the world, many are starting to think more seriously about our impact on the planet
+For many years, solar panels and wind turbines have been hailed as the harbinger of a renewable energy revolution that has only just very recently begun to take shape on a global scale.  The chief complaint from those hesitant to adopt or incorporate renewable energy sources was almost always their effect on energy prices.  At the time of writing, the world is engulfed in a novel Coronavirus pandemic that has shut down industry and social interaction around the globe.  As viral videos of crystal clear streams and suburban big cats make their way around the world, many are starting to think more seriously about our impact on the planet.
 
 With a fair bit of inspiration from a [recent paper on *Tackling Climate Change with Machine Learning*](https://arxiv.org/abs/1906.05433), I have made an effort to better understand the forces that act upon energy prices. In this analysis I endeavor to build a model that can predict energy prices based on generation and weather data and, hopefully, provide some insight as to how renewables affect those prices.
 
 ## Data
-This publicly available dataset came in two seperate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in late 2019.  Some previous work has been done wit this data to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.  As such, the following analysis does not consider the effects of the time-series on price.
+This publicly available dataset came in two separate .csv files (weather and energy) posted on [Kaggle](https://www.kaggle.com/nicholasjhana/energy-consumption-generation-prices-and-weather#weather_features.csv) in late 2019.  Some previous work has been done wit this data to understand the effect of time on energy prices, but I was more interested in determining the effect of different energy generation mixtures and weather.  As such, the following analysis does not consider the effects of the time-series on price.
 
 
-The combined dataset contained 178,000 rows of hourly data between January 2015 and Deember 2018. The target of my predictions was real-time energy price in EUR/MWh provided by the energy csv.
+The combined dataset contained 178,000 rows of hourly data between January 2015 and December 2018. The target of my predictions was real-time energy price in EUR/MWh provided by the energy csv.
 
 
 The weather dataset contained temperature, humidity, pressure, wind speed and more data for the 5 largest cities in Spain: Madrid, Barcelona, Valencia, Sevilla, Bilbao.
@@ -69,7 +69,7 @@ I had a suspicion that weather_description and weather_id were redundant as they
 | mist                         | 701        | mist           |
 | fog                          | 741        | fog            |
 
-weather_description and weather_id match nearly 1:1, and weather_main contains faily intuitive groupings of weather types.  I opted to one-hot encode weather_main and discard the other two to minimize dimensionality.
+weather_description and weather_id match nearly 1:1, and weather_main contains fairly intuitive groupings of weather types.  I opted to one-hot encode weather_main and discard the other two to minimize dimensionality.
 
 
 #### Correlation Matrices
@@ -107,12 +107,10 @@ To address these concerns, I used SKlearn's pipeline class to compare my random 
 | LinearRegression      | 0.44      | 0.43     |             |
 
 
-These results indicate that the relationships at play between the features and the target are not linear, and that in order to get highly interpretable results from a Linear Model, significant feature engineering would be required.
-
 
 ## Interpretation
 #### Feature Importance
-I hoped to gain insight into the effect of my features on energy price by plotting the feature importances for my RandomForestRegressor.  The results of this are shown below, with gas and coal generation leading the list, followed by total load (demand), hydropower, and a feature called 'generation other renewable' on which the data documentation sheds unfortunately little light.
+I hoped to gain insight into the effect of my features on energy price by plotting the feature importance for my RandomForestRegressor.  The results of this are shown below, with gas and coal generation leading the list, followed by total load (demand), hydropower, and a feature called 'generation other renewable' on which the data documentation sheds unfortunately little light.
 
 
 ![](images/feature_imp_sparse.png)
@@ -126,7 +124,7 @@ Here we see the top three most important features, each clearly with a positive 
 <img src="images/pd1.png" width="500" height="300" />
 
 
-One of the most significant weather metrics in the dataset, wind speed in madrid has a strong negative correlation with energy price.
+One of the most significant weather metrics in the dataset, wind speed in Madrid has a strong negative correlation with energy price.
 
 <p align="center">
 <img src="images/pd3.png" width="500" height="300" />
@@ -137,7 +135,7 @@ Interesting step behavior with solar generation and some very strange behavior i
 <img src="images/pd2.png" width="500" height="300" />
 
 
-An interesting, hydro pumped storage just misses the top ten feature importances, but since it is often used in concert with renewables, it may have interesting implications for renewables.
+An interesting plot, hydro pumped storage just misses the top ten feature importance, but since it is often used in concert with renewables, it may have interesting implications for renewables.
 <p align="center">
 <img src="images/pd4.png" width="500" height="400" />
 
@@ -147,7 +145,7 @@ An interesting, hydro pumped storage just misses the top ten feature importances
 A this point we have a model that performs quite well at predicting energy prices given generation statistics and a few key weather metrics.  With a chance to expand on this process I would hope to apply this model to a united states dataset.  
 
 #### Optimize price to reduce GHG emissions
-Once we can predict energy prices given data about which energy sources are generating power, I believe the most utility can be found in reverse engineering the process to find prices that produce the fewest GHG emissions.  This information would be incrediblt useful to governing and regulatory bodies, as well as public utiities.
+Once we can predict energy prices given data about which energy sources are generating power, I believe the most utility can be found in reverse engineering the process to find prices that produce the fewest GHG emissions.  This information would be incredibly useful to governing and regulatory bodies, as well as public utilities.
 
 ### Image credits:
 https://energywatch-inc.com/electricity-pricing-influencers/
